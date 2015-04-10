@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../css/admin.css">
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../js/main.js"></script>
+</head>
+<body style="padding: 20px;">
+<style>
+.addr_arr{
+	margin: 20px 0;
+	padding: 20px;
+	background: #ececec;
+}
+</style>
+<div><a id="add_addr" href="javascript:" class="blue">添加收货人</a></div>
+<table class="addr_arr">
+	<thead>
+		<tr>
+			<td><a class="del_addr" href="javascript:">删除此收货人</a></td>
+			<td></td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td valign="top">收货人姓名：</td>
+			<td><input type="text" class="name" /></td>
+		</tr>
+		<tr>
+			<td valign="top">收货人电话：</td>
+			<td><input type="text" class="mobile" /></td>
+		</tr>
+		<tr>
+			<td valign="top">收货地址：</td>
+			<td><textarea class="address"  style="width: 500px;height: 70px;"></textarea></td>
+		</tr>
+	</tbody>
+</table>
+
+<a class="ui-btn">保存</a>
+
+<script type="text/javascript">
+	$(function(){
+				
+		$.ajax({
+			url : "/Selisse/getAgentAddress",
+			data : "userID=" + localStorage.getItem("userID"),
+			dataType : "json",
+			success : function(data){
+				for(var index=0;index<data.length;index++){
+					if(index!=0){
+						$("#add_addr").click();
+					}
+					$(".name").eq(index).val(data[index].name);
+					$(".mobile").eq(index).val(data[index].mobile);
+					$(".address").eq(index).val(data[index].addr);
+				}
+			}
+		});
+		
+		
+		
+		$(".ui-btn").click(function(){
+			var nameArr = [],mobileArr = [],addrArr = [];
+			// 格式检查
+			var right = true;
+			$(".name").each(function(){
+				if($(this).val()==""){
+					right=false;
+				}
+				nameArr.push($(this).val());
+			});
+			$(".mobile").each(function(){
+				if($(this).val()==""){
+					right=false;
+				}
+				mobileArr.push($(this).val());
+			});
+			$(".address").each(function(){
+				if($(this).val()==""){
+					right=false;
+				}
+				addrArr.push($(this).val());
+			});
+			if(!right){
+				alert("收货人姓名，电话，地址都不能为空！");
+				return;
+			}
+			
+			if($(".address").val() == ""){
+				alert("收货地址不能为空！")
+			}else{
+				$.ajax({
+					url : "/Selisse/updateAgentInfo",
+					type: "post",
+					data: {
+						agentID:  localStorage.getItem("userID"),
+						names: nameArr.join("|"),
+						mobiles: mobileArr.join("|"),
+						addrs: addrArr.join("|"),
+						type: "address"
+					},
+					success: function(data){
+						if(data == "000000"){
+							alert("保存成功！");
+						}
+						else{
+							alert("保存失败！");
+						}
+					}
+				});
+			}
+		});
+		
+		$("#add_addr").click(function(){
+			var newTable = $(".addr_arr").eq(0).clone().find("input,textarea").val("").end();
+			newTable.insertAfter($(".addr_arr").last());
+			bindE();
+		});
+		
+		function bindE(){
+			$(".del_addr").unbind("click").click(function(){
+				if($(".del_addr").length == 1){
+					alert("至少要有一个收货人噻！");
+					return;
+				}
+				$(this).parents("table").remove();
+			});
+		}
+		bindE();
+	});
+</script>
+</body>
+</html>

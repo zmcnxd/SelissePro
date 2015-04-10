@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../css/admin.css">
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../js/main.js"></script>
+</head>
+<body>
+
+<div id="product-container" class="product-container">
+<h3>正装</h3>
+</div><br /><br />
+
+<div id="xiaoyang-container" class="product-container" style="display: none;clear:left;">
+<h3>小样</h3>
+</div><br /><br />
+
+<div id="wuliao-container" class="product-container" style="display: none;clear:left;">
+<h3>物料</h3>
+</div>
+<div class="address" style="clear: left;margin: 30px 20px;background: #ececec;padding: 10px;">
+
+</div>
+<h3 style="padding: 20px;">快递申明：公司默认快递为申通；满3000元可包邮一个地点；其它包裹1KG内收费10元，超过部分每KG加收5元。</h3>
+<div class="buy-confirm">
+	<a class="ui-btn">确认并结算</a>
+</div>
+<script type="text/javascript">
+	// 获取收货地址
+	$.ajax({
+			url : "/Selisse/getAgentAddress",
+			data : "userID=" + localStorage.getItem("userID"),
+			dataType : "json",
+			success : function(data){
+				if(data.length==0){
+					alert("没有设置收货地址，不能订货，请先设置收货地址!");
+					window.location.href = "/Selisse/admin/agent/setAddress.html";
+					return;
+				}
+				for(var index=0;index<data.length;index++){
+					$(".address").append('<p><input type="radio" data-addr-text="'+data[index].name+','+data[index].mobile+','+data[index].addr+'" value="'+index+'"'+(index==0?' checked':'')+'  name="addr"/>收货人姓名：<span id="reciver">'+data[index].name+'</span>&nbsp;&nbsp;'
+					+'电话：<span id="mobile">'+data[index].mobile+'</span>&nbsp;&nbsp;收货地址：<span id="addr">'+data[index].addr+'</span></p>');
+				}
+			}
+		});
+	
+	// 产品订购数量对象
+	var proBuy = {};
+	var productContainer = null;
+	// 获取所有正装产品
+	$.ajax({
+		url : "/Selisse/getProduct",
+		dataType : "json",
+		success : function(data){
+			data.forEach(function(item){
+				if(item.type==1){
+					productContainer = $("#product-container");
+				}else if(item.type==2){
+					productContainer = $("#xiaoyang-container");
+				}else if(item.type==3){
+					productContainer = $("#wuliao-container");
+				}
+				var type = (localStorage.getItem("userType") == "a" ? "A" : "总");
+				var price = (type == "A" ? item.aPrice: item.zongPrice);
+				$("<div class='product'><div class='productImg'>"+
+						"<a href='productDetail.html?productID=" + item.ID +
+						"'><img src='/Selisse/" + item.imgSrc + "' /></a></div>"+
+						"<div class='productName'>" + item.name + "</div>"+
+						"<div class='price'>"+type+"代价："+price+"元</div>"+
+						"<div class='buy-amount'>订购数量：<span class='jian' onclick='jian(this)'>-</span><input oninput='OnInput (event)' onpropertychange='OnPropChanged (event)' data-price='"+price+"' data-productID='"+item.ID+"' type='text' value='0'/><span class='jia' onclick='jia(this,\""+price+"\",\""+item.ID+"\",\""+item.type+"\")'>+</span></div></div>").appendTo(productContainer);
+				proBuy[item.ID] = 0;
+			});
+		}
+	});
+	
+	var totalPrice = 0;
+	var xiaoyangTotalPrice = 0;
+	var wuliaoTotalPrice = 0;
+	// Firefox, Google Chrome, Opera, Safari, Internet Explorer from version 9
+    function OnInput (event) {
+    	countAmount();
+    }
+	// Internet Explorer
+    function OnPropChanged (event) {
+    	countAmount();
+    }
+	
+	function countAmount(){
+		// 重新计算下金额
+		totalPrice=xiaoyangTotalPrice=wuliaoTotalPrice=0;
+		$("#product-container .product,#xiaoyang-container .product,#wuliao-container .product").each(function(){
+			var input = $(this).find(".buy-amount input");
+			var price = input.attr("data-price");
+			var productID = input.attr("data-productID");
+			var orderNum = input.val();
+			proBuy[productID] = orderNum;
+			if($(this).parent().attr("id") == "product-container"){
+				totalPrice += price * orderNum;
+			}
+			if($(this).parent().attr("id") == "xiaoyang-container"){
+				xiaoyangTotalPrice += price * orderNum;
+			}
+			if($(this).parent().attr("id") == "wuliao-container"){
+				wuliaoTotalPrice += price * orderNum;
+			}
+			dealXiaoyang();
+		});
+	}
+	
+	function jian(obj){
+		if($(obj).next().val() > 0){
+			$(obj).next().val(parseInt($(obj).next().val()) - 1);
+		}
+		countAmount();
+	}
+	function jia(obj){
+		$(obj).prev().val(parseInt($(obj).prev().val()) + 1);
+		countAmount();
+	}
+	
+	function dealXiaoyang(){
+		if(totalPrice>=1){
+			$("#xiaoyang-container").show();
+			$("#wuliao-container").show();
+		}else{
+			$("#xiaoyang-container").hide();
+			$("#wuliao-container").hide();
+		}
+	}
+	
+	$(".buy-confirm a").click(function(){
+		
+		
+		if(confirm("点击确认将生成订单详情，确认后将不可编辑，只可删除订单，请再次确认")){
+			// 小样和物料总额不能超过正装订单金额的5%
+			if((xiaoyangTotalPrice+wuliaoTotalPrice) > totalPrice * 0.05){
+				alert("小样和物料总额不能超过正装订单金额的5%");
+				return;
+			}
+			if(localStorage.getItem("userBalance") >= totalPrice){
+				// 生成订单
+				$.ajax({
+					url: "/Selisse/addOrder",
+					type: "post",
+					data: {
+						name: localStorage.getItem("userName"),
+						reciver: $("#reciver").html(),
+						address: $("input[name='addr']:checked").attr("data-addr-text"),
+						mobile: $("#mobile").html(),
+						amount: totalPrice,
+						products: JSON.stringify(proBuy),
+						samples: "",
+						wuliao: "",
+						charges: "8"
+					},
+					success: function(data){
+						if(data == "000000"){
+							alert("结算成功，可在订单查询里查询，稍后跟单会为您发货！");
+
+							// 更新余额
+							$.ajax({
+								url: "/Selisse/updateAgentInfo",
+								type: "post",
+								data: "agentID=" + localStorage.getItem("userID") + "&value=" + (localStorage.getItem("userBalance") - totalPrice) + "&type=balance",
+								success: function(data){
+									if(data == "000000"){
+										alert("余额已更新，请刷新页面查看！");
+									}else{
+										alert("余额更新失败！");
+									}
+								}
+							});
+						}else{
+							alert("结算失败，请联系小明！");
+						}
+					}
+				});
+			}else{
+				alert("余额不足，请联系大管家充值！");
+			}
+		}
+	});
+</script>
+</body>
+</html>

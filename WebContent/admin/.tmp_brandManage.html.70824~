@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="kindEditor/themes/default/default.css">
+<script charset="utf-8" src="kindEditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="kindEditor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	editor = K.create('textarea[name="content"]', {
+		allowFileManager : true
+	});
+	editor.html("");
+	K('input[name=editInfo]').click(function(e) {
+		// 当前编辑的公共信息ID
+		$.ajax({
+			url : "/Selisse/editBrandInfo",
+			type : "post",
+			data : "id=" + commonID + "&content=" + encodeURIComponent(editor.html()),
+			success : function(data){
+				if(data == "000000"){
+					alert("更新成功！");
+				}
+				else{
+					alert("更新失败！");
+				}
+			}
+		});
+	});
+});
+</script>
+</head>
+<body>
+<div id="allType">
+</div>
+<div>
+<form>
+	<textarea name="content" style="width:800px;height:400px;visibility:hidden;">KindEditor</textarea>
+	<p>
+		<input type="button" name="editInfo" value="确定" />
+	</p>
+</form>
+</div>
+<script type="text/javascript">
+$(function(){
+	infos = null;
+	commonID = null;
+	// 获取公共信息
+	$.ajax({
+		url : "/Selisse/getBrandIntroduction",
+		dataType : "json",
+		success : function(data){
+			infos = data;
+			data.forEach(function(item){
+				$("<a style='cursor:pointer;' onclick='editInfo(\""+item.ID+"\")'>" + item.title + "&nbsp;&nbsp;</a>").appendTo($("#allType"));
+			});
+		}
+	});
+});
+
+function editInfo(id){
+	infos.forEach(function(item){
+		if(item.ID == id){
+			editor.html(decodeURIComponent(item.content));
+			commonID = id;
+		}
+	});
+}
+</script>
+</body>
+</html>

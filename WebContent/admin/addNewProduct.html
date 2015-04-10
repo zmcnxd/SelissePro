@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="kindEditor/themes/default/default.css">
+<script charset="utf-8" src="kindEditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="kindEditor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="../js/jquery.js"></script>
+<script charset="utf-8" src="../js/main.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	editor = K.create('#content', {
+		allowFileManager : true
+	});
+	editor.html("");
+	K('input[name=updateProduct]').click(function(e) {
+		if($("#product_name").val()==""){
+			alert("不要忘了填写产品名称哟！");
+			return;
+		}
+		if($("#pic_url").val()==""){
+			alert("难道产品没有图片？");
+			return;
+		}
+		if(editor.html()==""){
+			alert("来点内容吧！");
+			return;
+		}
+		$("#deal_content").val(encodeURIComponent(editor.html()));
+		$("#update_form").submit();
+	});
+});
+</script>
+<form id="update_form" method="post" action="/Selisse/addProduct" enctype="multipart/form-data">
+<input id="product_id" type="hidden" name="product_id" value="" />
+	<table>
+		<tr>
+			<td>名称：</td>
+			<td><input type="text" id="product_name" name="product_name" style="width: 300px;"/></td>
+		</tr>
+		<tr>
+			<td>类型：</td>
+			<td><select id="product_type" name="product_type"><option value="1">正装</option><option value="2">小样</option><option value="3">物料</option></select></td>
+		</tr>
+		<tr>
+			<td>	图片：</td>
+			<td>
+				<img id="old_img" src=""/><br />
+				<input id="pic_url" type="file" name="pic_url" />
+			</td>
+		</tr>
+		<tr>
+			<td>	内容：</td>
+			<td><textarea id="content" style="width:800px;height:400px;visibility:hidden;">KindEditor</textarea>
+			<input type="hidden" id="deal_content" name="content" />
+			</td>
+		</tr>
+		<tr>
+			<td>	排序：</td>
+			<td><input type="text" id="order"  name="order" value="0"/></td>
+		</tr>
+		<tr>
+			<td>	规格：</td>
+			<td><input type="text" id="guige"  name="guige" value=""/></td>
+		</tr>
+		<tr>
+			<td>	总代价格：</td>
+			<td><input type="text" id="zong_price"  name="zong_price" value="0"/></td>
+		</tr>
+		<tr>
+			<td>	A代价格：</td>
+			<td><input type="text" id="a_price"  name="a_price" value="0"/></td>
+		</tr>
+		<tr>
+			<td>库存：</td>
+			<td><input type="text" id="amount"  name="amount" value="0"/></td>
+		</tr>
+		<tr>
+			<td>最后入库时间：</td>
+			<td><input type="text" id="last_in_time"  name="last_in_time" value=""/></td>
+		</tr>
+		<tr>
+			<td>最后更新时间：</td>
+			<td><input type="text" id="last_update_time"  name="last_update_time" value=""/></td>
+		</tr>
+	</table>
+	<p>
+		<input type="button" name="updateProduct" value="确定" />
+	</p>
+</form>
+<script type="text/javascript">
+	
+</script>
+</body>
+</html>

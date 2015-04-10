@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>诗轩-后台</title>
+<link rel="stylesheet" type="text/css" href="css/admin.css">
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/main.js"></script>
+</head>
+<body>
+<style>
+td{padding: 10px;}
+</style>
+<table>
+	<tr><td>用户名：</td><td><span id="name"></span></td></tr>
+	<tr><td>下单时间：</td><td><span id="time"></span></td></tr>
+	<tr><td>收货人：</td><td><span id="reciver"></span></td></tr>
+	<tr><td>地址：</td><td><span id="address"></span></td></tr>
+	<tr><td>手机：</td><td><span id="mobile"></span></td></tr>
+	<tr><td>金额：</td><td><span id="amount"></span></td></tr>
+	<tr><td>产品正装：</td><td><span id="products"></span></td></tr>
+	<tr><td>小样：</td><td><span id="xiaoyang"></span></td></tr>
+	<tr><td>物料：</td><td><span id="wuliao"></span></td></tr>
+	<tr><td>快递：</td><td><span id="express"></span></td></tr>
+	<tr><td>快递费：</td><td><span id="charges"></span></td></tr>
+	<tr><td>快递单号：</td><td id="express_no"></td></tr>
+	<tr><td>状态：</td><td id="status"><input type="radio" name="status" checked/><strong>未发货</strong>&nbsp;&nbsp;<input name="status" type="radio" /><strong>已发货</strong></td></tr>
+	
+</table>
+<div style="margin: 30px;">
+<a class="ui-btn">确定</a>
+</div>
+<script type="text/javascript">
+	if(getPara("from") == "agent"){
+		$(".ui-btn").hide();
+		$("#express_no").attr("readonly","true");
+		
+	}
+	
+	var zhongtong = 'https://www.baidu.com/s?wd=%E4%B8%AD%E9%80%9A&rsv_spt=1&issp=1&f=8&rsv_bp=0&rsv_idx=2&ie=utf-8&tn=baiduhome_pg&rsv_enter=1&rsv_sug3=8&rsv_sug1=2';
+	var shentong = 'https://www.baidu.com/s?wd=%E7%94%B3%E9%80%9A';
+	// 获取订单详情
+	$.ajax({
+		url: "/Selisse/getOrderDetail",
+		type: "get",
+		dataType: "json",
+		data: "orderID=" + getPara("orderID"),
+		success: function(data){
+			$("#name").html(data.name);
+			$("#time").html(data.time);
+			$("#reciver").html(data.reciver);
+			$("#address").html(data.address);
+			$("#mobile").html(data.mobile);
+			$("#amount").html(data.amount);
+			$("#express").html(data.express);
+			$("#express_no").html(data.express_no+"&nbsp;&nbsp;<a target='_blank' href='"+(data.express=="中通"?zhongtong:shentong)+"'>查询快递详情</a>");
+			$("#charges").html(data.charges);
+			$("#status").html(data.status==0?"未发货":"已发货");
+			var productArr = $.parseJSON(data.products);
+			// 获取订单产品
+			$.ajax({
+				url : "/Selisse/getProduct",
+				dataType : "json",
+				success : function(json){
+					json.forEach(function(item){
+						if(productArr[item.ID] > 0){
+							if(item.type == 1){
+								$("<strong>" + item.name + "</strong>&nbsp;&nbsp;" + productArr[item.ID] + "件<br />").appendTo($("#products"));
+							}else if(item.type == 2){
+								$("<strong>" + item.name + "</strong>&nbsp;&nbsp;" + productArr[item.ID] + "件<br />").appendTo($("#xiaoyang"));
+							}else if(item.type == 3){
+								$("<strong>" + item.name + "</strong>&nbsp;&nbsp;" + productArr[item.ID] + "件<br />").appendTo($("#wuliao"));
+							}
+							
+						}
+					});
+				}
+			});
+		}
+	});
+	
+	$(".ui-btn").click(function(){
+		var expressNo = $("#express_no").val();
+		var status = $("#status input").get(0).checked ? 0 : 1;
+		$.ajax({
+			url: "/Selisse/updateOrder",
+			type: "post",
+			data: {
+				orderID: getPara("orderID"),
+				expressNo: expressNo,
+				status: status
+			},
+			success: function(data){
+				if(data == "000000"){
+					alert("更新成功！")
+				}else{
+					alert("更新失败！");
+				}
+			}
+		});
+	});
+	
+</script>
+</body>
+</html>

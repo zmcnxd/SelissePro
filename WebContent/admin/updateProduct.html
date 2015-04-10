@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="kindEditor/themes/default/default.css">
+<script charset="utf-8" src="kindEditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="kindEditor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="../js/jquery.js"></script>
+<script charset="utf-8" src="../js/main.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	editor = K.create('#content', {
+		allowFileManager : true
+	});
+	editor.html("");
+	K('input[name=updateProduct]').click(function(e) {
+		$("#deal_content").val(encodeURIComponent(editor.html()));
+		$("#update_form").submit();
+	});
+});
+</script>
+<form id="update_form" method="post" action="/Selisse/updateProduct" enctype="multipart/form-data">
+<input id="product_id" type="hidden" name="product_id" value="" />
+	<table>
+		<tr>
+			<td>名称：</td>
+			<td><input type="text" id="product_name" name="product_name" style="width: 300px;"/></td>
+		</tr>
+		<tr>
+			<td>类型：</td>
+			<td><select id="product_type" name="product_type"><option value="1">正装</option><option value="2">小样</option><option value="3">物料</option></select></td>
+		</tr>
+		<tr>
+			<td>	图片：</td>
+			<td>
+				<img id="old_img" src=""/><br />
+				<input id="pic_url" type="file" name="pic_url" />
+			</td>
+		</tr>
+		<tr>
+			<td>	内容：</td>
+			<td><textarea id="content" style="width:800px;height:400px;visibility:hidden;">KindEditor</textarea>
+			<input type="hidden" id="deal_content" name="content" />
+			</td>
+		</tr>
+		<tr>
+			<td>	排序：</td>
+			<td><input type="text" id="order"  name="order"/></td>
+		</tr>
+		<tr>
+			<td>	规格：</td>
+			<td><input type="text" id="guige"  name="guige" value=""/></td>
+		</tr>
+		<tr>
+			<td>	总代价格：</td>
+			<td><input type="text" id="zong_price"  name="zong_price" value="0"/></td>
+		</tr>
+		<tr>
+			<td>	A代价格：</td>
+			<td><input type="text" id="a_price"  name="a_price" value="0"/></td>
+		</tr>
+		<tr>
+			<td>库存：</td>
+			<td><input type="text" id="amount"  name="amount" value="0"/></td>
+		</tr>
+		<tr>
+			<td>最后入库时间：</td>
+			<td><input type="text" id="last_in_time"  name="last_in_time" value=""/></td>
+		</tr>
+		<tr>
+			<td>最后更新时间：</td>
+			<td><input type="text" id="last_update_time"  name="last_update_time" value=""/></td>
+		</tr>
+	</table>
+	<p>
+		<input type="button" name="updateProduct" value="确定" />
+	</p>
+</form>
+<script type="text/javascript">
+	$(function(){
+		// 根据url中产品ID获取产品详细信息
+		var productID = getPara("productID");
+		$("#product_id").val(productID);
+		$.ajax({
+			url : "/Selisse/getProductDetail",
+			data : "productID=" + productID,
+			dataType : "json",
+			success : function(data){
+				editor.html(decodeURIComponent(data.content));
+				$("#order").val(data.order);
+				$("#product_name").val(data.name);
+				$("#old_img").attr("src","/Selisse/"+data.imgSrc);
+				$("#guige").val(data.guige);
+				$("#zong_price").val(data.zongPrice);
+				$("#a_price").val(data.aPrice);
+				$("#amount").val(data.amount);
+				var newDate = new Date();
+				newDate.setTime(data.last_in_time.time);
+				$("#last_in_time").val(newDate.Format('yyyy-MM-dd h:m:s'));
+				newDate.setTime(data.last_update_time.time);
+				$("#last_update_time").val(newDate.Format('yyyy-MM-dd h:m:s'));
+				$("#product_type").find("option[value='"+data.type+"']").prop("selected","selected");
+			}
+		});
+	});
+</script>
+</body>
+</html>

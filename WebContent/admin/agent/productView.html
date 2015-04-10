@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="kindEditor/themes/default/default.css">
+<script charset="utf-8" src="kindEditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="kindEditor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="../../js/jquery.js"></script>
+<script charset="utf-8" src="../../js/main.js"></script>
+</head>
+<body>
+<style>
+td{padding:10px;}
+td img{width:80px;}
+thead td{background:#999;color:#fff;}
+tbody tr:nth-child(2n){background:#ddd;color:#000;}
+</style>
+<div id="allProduct">
+	<table>
+		<thead>
+			<tr>
+				<td>名称</td>
+				<td>进货价</td>
+				<td>类型</td>
+				<td>缩略图</td>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var agentType = localStorage.getItem("userType");
+		$.ajax({
+			url : "/Selisse/getProduct",
+			dataType : "json",
+			success : function(data){
+				data.forEach(function(item){
+					$("<tr><td>"+item.name+"</td><td>"+(agentType=="a"?item.aPrice:item.zongPrice)+"</td><td>"+(item.type==1?"正装":(item.type==2?"小样":"物料"))+"</td><td><img src='/Selisse/"+item.imgSrc+"'</td></tr>").appendTo($("#allProduct tbody"));
+				});
+			}
+		});
+	});
+	
+</script>
+</body>
+</html>

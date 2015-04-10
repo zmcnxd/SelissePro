@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script charset="utf-8" src="../js/jquery.js"></script>
+<script charset="utf-8" src="../js/main.js"></script>
+</head>
+<body>
+<div>
+<input type="button" value="添加" onclick="window.location.href='addIndexPic.html'" />
+<table id="pics"></table>
+</div>
+<script>
+	$(function(){
+		$.ajax({
+			url : "/Selisse/getIndexPics",
+			dataType : "json",
+			success : function(data){
+				data.forEach(function(item){
+					$("<tr><td>链接地址:</td><td>"+item.pic_href+
+					"</td><td>图片:</td><td><img style='width:300px;' src='/Selisse/"+item.img_path+
+					"' /></td><td><a href='updateIndexPic.html?id="+item.ID+"'>编辑</a></td><td><a onclick=\"deleteIndexPic('"+item.ID+"')\">删除</a></td></tr>").appendTo($("#pics"));
+				});
+			}
+		});
+	});
+	
+	function deleteIndexPic(id){
+		$.ajax({
+			url : "/Selisse/deleteIndexPic",
+			type : "post",
+			data : "id=" + id,
+			success : function(data){
+				if(data == "000000"){
+					window.location.reload();
+				}
+				else{
+					alert("删除失败");
+				}
+			}
+		});
+	}
+</script>
+</body>
+</html>

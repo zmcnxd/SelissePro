@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../css/admin.css">
+<script type="text/javascript" src="../../js/jquery.js"></script>
+<script type="text/javascript" src="../../js/main.js"></script>
+</head>
+<body class="admin-index">
+<div class="manage_left">
+<div id="user_info"></div>
+	<ul class="left_banner">
+		<li><a onclick="jump('productView.html')">正装产品</a></li>
+		<li><a onclick="jump('onlineBuy.html')">在线订货</a></li>
+		<li><a onclick="jump('myOrders.html')">我的订单</a></li>
+		<li><a onclick="jump('setAddress.html')">设置收货地址</a></li>
+		<li><a onclick="jump('../changePassword.html')">修改密码</a></li>
+		<li><a onclick="jump('../login.html')">退出</a></li>
+	</ul>
+</div>
+<div class="manage_right">
+	<iframe id="rightPage" style="width:100%;height:1000px;"></iframe>
+</div>
+<script type="text/javascript">
+	function jump(page){
+		if(page=="../login.html"){
+			window.location.href="/Selisse/admin/login.html";
+			return;
+		}
+		$("#rightPage").attr("src",page + "?username=" + getPara("username"));
+	}
+	
+	$(function(){
+		$("#user_info").append("您好！" + localStorage.getItem("userName"));
+		
+		$.ajax({
+			url : "/Selisse/getAgentDetail",
+			data : "agentID=" + localStorage.getItem("userID"),
+			dataType : "json",
+			success : function(data){
+				$("#user_info").append("&nbsp;&nbsp;账户余额：" + data.balance + "元");
+				localStorage.setItem("userBalance",data.balance);
+			}
+		});
+	});
+	
+</script>
+</body>
+</html>

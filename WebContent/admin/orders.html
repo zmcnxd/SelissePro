@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>诗轩-后台</title>
+<link rel="stylesheet" type="text/css" href="css/admin.css">
+<script type="text/javascript" src="../js/jquery.js"></script>
+</head>
+<body>
+<style>
+thead td{background:#999;color:#fff;padding: 10px 50px;}
+</style>
+<table>
+	<thead>
+		<tr>
+			<td>订单号</td>
+			<td>用户名</td>
+			<td>状态</td>
+			<td>操作</td>
+		</tr>
+	</thead>
+	<tbody>
+		
+	</tbody>
+</table>
+<script type="text/javascript">
+	$.ajax({
+		url: "/Selisse/getOrders",
+		type: "get",
+		dataType: "json",
+		success: function(data){
+			data.forEach(function(item){
+				$("<tr><td>"+item.ID+"</td><td>"+item.name+"</td><td>"+(item.status==0?"未发货":"已发货")+"</td><td><a href='orderDetail.html?orderID="+item.ID+"'>订单详情</a></td></tr>").appendTo($("tbody"));	
+			});
+		}
+	})
+</script>
+</body>
+</html>

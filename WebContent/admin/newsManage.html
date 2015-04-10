@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script charset="utf-8" src="../js/jquery.js"></script>
+<script charset="utf-8" src="../js/main.js"></script>
+</head>
+<body>
+<style>
+td{padding:10px;}
+td img{width:80px;}
+thead td{background:#999;color:#fff;}
+tbody tr:nth-child(2n){background:#ddd;color:#fff;}
+</style>
+<div>
+<input type="button" value="添加" onclick="window.location.href='addNews.html'" />
+<div id="newsList">
+	<table>
+		<thead>
+			<tr>
+				<td>标题</td>
+				<td>日期</td>
+				<td>种类</td>
+				<td>操作</td>
+			</tr>
+		</thead>
+		<tbody>
+		
+		</tbody>
+	</table>
+</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$.ajax({
+			url : "/Selisse/getNews",
+			dataType : "json",
+			success : function(data){
+				data.forEach(function(item){
+					$("<tr><td>" + item.title + "</td><td>" + item.date + "</td><td>"+(item.typeID==0?"新闻":"美丽课堂")+"</td><td><a style='cursor:pointer;' onclick='window.location.href=\"editNews.html?id="+item.ID+"\"'>编辑</a>&nbsp;&nbsp;<a style='cursor:pointer;' onclick='deleteNews(\""+item.ID+"\")'>删除</td></tr>").appendTo($("#newsList tbody"));
+				});
+			}
+		});
+	});
+	
+	function deleteNews(id){
+		$.ajax({
+			url : "/Selisse/deleteNews",
+			type : "post",
+			data : "id=" + id,
+			success : function(data){
+				if(data == "000000"){
+					window.location.reload();
+				}
+				else{
+					alert("删除失败");
+				}
+			}
+		});
+	}
+</script>
+</body>
+</html>

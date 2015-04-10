@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script charset="utf-8" src="../js/jquery.js"></script>
+<script charset="utf-8" src="../js/main.js"></script>
+</head>
+<body>
+<div>
+<input type="button" value="添加" onclick="window.location.href='addAgent.html'" />
+<div id="agentList">
+	
+</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$.ajax({
+			url : "/Selisse/getAgents",
+			dataType : "json",
+			success : function(data){
+				data.forEach(function(item){
+					$("<div class='agents'><span id='name'>" + item.name + "</span>&nbsp;&nbsp;&nbsp;&nbsp;<a style='cursor:pointer;' onclick='window.location.href=\"editAgent.html?id="+item.ID+"\"'>编辑</a>&nbsp;&nbsp;<a style='cursor:pointer;' onclick='deleteAgent(\""+item.ID+"\")'>删除</a></div>").appendTo($("#agentList"));
+				});
+			}
+		});
+	});
+	
+	function deleteAgent(id){
+		$.ajax({
+			url : "/Selisse/deleteAgent",
+			type : "post",
+			data : "id=" + id,
+			success : function(data){
+				if(data == "000000"){
+					window.location.reload();
+				}
+				else{
+					alert("删除失败");
+				}
+			}
+		});
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<title>诗轩（SELISSE）明星产品-裸妆护肤第一品牌</title>
+<meta name="description" content="SÉLISSE诗轩裸妆护肤品主要包括：诗轩水润滋养面膜、倍润清爽洁面啫喱、全效柔润爽肤水、水漾活妍保湿霜、红石榴净颜洁面乳、红石榴莹润精华水、红石榴莹润精华乳、红石榴莹润保湿霜、玫瑰美白精华霜、诗轩亮彩修护眼霜、水凝活肤睡眠面膜、修颜滋养隔离霜、诗轩美颜修容霜、诗轩焕颜新生面膜、诗轩驻颜修护面膜。">
+<meta name="keywords" content="诗轩、SELISSE、诗轩面膜、诗轩产品、化妆品、护肤品、裸妆面膜、蚕丝面膜、洁面、啫喱、爽肤、精华、乳液、面霜、睡眠面膜、隔离霜、BB霜、眼霜">
+</head>
+<body>
+<div class="mainContainer">
+	<div class="header">
+		<div class="logo">诗轩 • 裸妆护肤第一品牌</div>
+		<div class="selisse"></div>
+		<div class="userCenter">
+			<p id="msg"><span class="welcome">欢迎光临</span><br />
+			咨询热线&nbsp;&nbsp;400-999-7705</p>
+		</div>
+	</div>
+	<div class="banner">
+		<div class="searchBox">
+			<div class="inputBox"><div class="searchButton"></div><input type="text" id="search" /></div>
+		</div>
+		<ul>
+			<li><a href="index.html">诗轩首页</a></li>
+			<li><a href="brandIntroduction.html">品牌介绍</a></li>
+			<li><a href="product.html">明星产品</a></li>
+			<li><a target="_blank" href="http://shop110729578.taobao.com/">在线购买</a></li>
+			<li><a href="news.html">新闻公告</a></li>
+			<li><a href="">防伪查询</a></li>
+			<li><a>会员中心</a></li>
+			<li><a style="cursor:pointer;" onclick="goCommonInfo('招商代理')">招商代理</a></li>
+		</ul>
+		<div class="yellowLine"></div>
+	</div>
+	<div class="navigation">
+		<a href="index.html">诗轩首页</a>　>　产品展示
+	</div>
+	<div class="leftMenu">
+		<ul class="menuList">
+			<li><a href="product.html">全部产品</a></li>
+		</ul>
+	</div>
+	<div class="rightContainer">
+	
+	</div>
+	<div class="clear"></div>
+	<div class="yellowLine"></div>
+	<div class="footer">
+		<div class="links">
+			<a style="cursor:pointer;" onclick="goCommonInfo('联系我们')">联系我们</a>
+			<a style="cursor:pointer;" onclick="goCommonInfo('求职应聘')">求职应聘</a>
+			<a style="cursor:pointer;" onclick="goCommonInfo('客户服务')">客户服务</a>
+			<a style="cursor:pointer;" onclick="goCommonInfo('隐私条款')">隐私条款</a>
+			<a style="cursor:pointer;" onclick="goCommonInfo('友情链接')">友情链接</a>
+		</div>
+		<center>2014 All Rights Reserved    诗轩裸妆护肤第一品牌     <a href="http://www.miibeian.gov.cn/state/outPortal/loginPortal.action;jsessionid=SxdcTzxRvsBbhvypQqNJlr16JZvwRZ58hZh2yKCVKyxy4G19qb2Q!484212753">渝ICP备09036223号</a></center>
+	</div>
+<script type="text/javascript">
+	$(function(){
+		// 获取产品分类
+		$.ajax({
+			url : "getProductSort",
+			dataType : "json",
+			success : function(data){
+				data.forEach(function(item){
+					$("<li><a href='product.html?sortID=" + item.ID + "'>" + item.sortName + "</a></li>").appendTo($(".menuList"));
+				});
+			}
+		});
+		
+		// 根据url中分类ID获取相关产品
+		var sortID = getPara("sortID");
+		$.ajax({
+			url : "getProduct",
+			data : "sortID=" + sortID,
+			dataType : "json",
+			success : function(data){
+				data.forEach(function(item){
+					$("<div class='product'><div class='productImg'><a href='productDetail.html?productID=" + item.ID + "'><img src='" + item.imgSrc + "' /></a></div><div class='productName'>" + item.name + "</div></div>").appendTo($(".rightContainer"));
+				});
+			}
+		});
+	});
+</script>
+</div>
+</body>
+</html>

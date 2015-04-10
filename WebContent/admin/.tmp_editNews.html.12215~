@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="kindEditor/themes/default/default.css">
+<script charset="utf-8" src="kindEditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="kindEditor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="../js/jquery.js"></script>
+<script charset="utf-8" src="../js/main.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	editor = K.create('textarea[name="content"]', {
+		allowFileManager : true
+	});
+	editor.html("");
+	K('input[name=addNews]').click(function(e) {
+		// 添加一条新闻
+		if(document.getElementById("newsTitle").value == "" || editor.html() == ""){
+			alert("请完整填写！");
+			return;
+		}
+		else{
+			$.ajax({
+				url : "/Selisse/updateNews",
+				type : "post",
+				data : "id=" + getPara("id") + "&title=" + $("#newsTitle").val() + "&content=" + editor.html() + "&date=" + $("#date").val(),
+				success : function(data){
+					if(data == "000000"){
+						alert("更新成功！");
+					}
+				}
+			})
+		}
+	});
+});
+</script>
+</head>
+<body>
+<div>
+标题：<input type="text" id="newsTitle" style="width:500px;" /><br /><br />
+
+日期：(请以"2014-06-17 11:51:27"这种格式填写时间，留空则取当前时间)<br /><br />
+<div>
+	<input type="text" id="date" style="width:200px;"/>
+</div>
+</div>
+<div>
+内容：<br /><br />
+<form>
+	<textarea name="content" style="width:800px;height:400px;visibility:hidden;">KindEditor</textarea>
+	<p>
+		<input type="button" name="addNews" value="确定" />
+	</p>
+</form>
+</div>
+<script type="text/javascript">
+	$(function(){
+		var newsID = getPara("id");
+		if(newsID){
+			$.ajax({
+				url : "/Selisse/getNewsDetail",
+				data : "newsID=" + newsID,
+				dataType : "json",
+				success : function(data){
+					$("#newsTitle").val(data.title);
+					$("#date").val(new Date(data.date.time).Format("yyyy-MM-dd hh:mm:ss"));
+					editor.html(data.content);
+				}
+			});
+			return;
+		}
+	});
+</script>
+</body>
+</html>

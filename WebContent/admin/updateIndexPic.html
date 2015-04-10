@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script charset="utf-8" src="../js/jquery.js"></script>
+<script charset="utf-8" src="../js/main.js"></script>
+
+</head>
+<body>
+<form method="post" action="/Selisse/updateIndexPic" enctype="multipart/form-data">
+	<input id="indexPicID" type="hidden" name="indexPicID" value="" />
+<table>
+	<tr>
+		<td>链接地址：</td>
+		<td><input id="pic_href" type="text" name="pic_href" /></td>
+	</tr>
+	<tr>
+		<td>图片：</td>
+		<td>
+			<img id="old_img" src=""/><br />
+			<input id="pic_url" type="file" name="pic_url" /></td>
+	</tr>
+	<tr>
+		<td>
+		<input type="submit" id="updateIndexPic" value="确定" />
+		</td>
+		<td>
+			<a href="indexPicManage.html">取消</a>
+		</td>
+	</tr>
+</table>
+</form>
+<script type="text/javascript">
+	$(function(){
+		var indexPicID = getPara("id");
+		$("#indexPicID").val(indexPicID);
+		if(indexPicID){
+			$.ajax({
+				url : "/Selisse/getIndexPicDetail",
+				data : "indexPicID=" + indexPicID,
+				dataType : "json",
+				success : function(data){
+					$("#pic_href").val(data.pic_href);
+					$("#old_img").attr("src","/Selisse/" + data.img_path);
+				}
+			});
+			return;
+		}
+	});	
+</script>
+</body>
+</html>
