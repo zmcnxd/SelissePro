@@ -20,14 +20,21 @@
 <div id="wuliao-container" class="product-container" style="display: none;clear:left;">
 <h3>物料</h3>
 </div>
-<div class="address" style="clear: left;margin: 30px 20px;background: #ececec;padding: 10px;">
+<div class="address" style="clear: left;margin: 30px 10px;background: #ececec;padding: 10px;font-size: 12px;">
 
 </div>
-<h3 style="padding: 20px;">快递申明：公司默认快递为申通；满3000元可包邮一个地点；其它包裹1KG内收费10元，超过部分每KG加收5元。</h3>
+<div class="express" style="margin: 20px 10px;">
+	快递：<select id="express_choose"></select>
+</div>
+<h3 style="padding: 10px;font-size: 14px;background: #ececec;margin: 10px;">快递申明：公司默认快递为申通；满3000元可包邮一个地点；其它包裹1KG内收费10元，超过部分每KG加收5元。</h3>
 <div class="buy-confirm">
 	<a class="ui-btn">确认并结算</a>
 </div>
 <script type="text/javascript">
+	var exprArr = ['申通','中通','顺丰','EMS','圆通','韵达','百世汇通','宅急送','天天','德邦物流','新邦物流','天地华宇'];
+	for(var index=0;index<exprArr.length;index++){
+		$("#express_choose").append("<option value='"+index+"'>"+exprArr[index]+"</option>");
+	}
 	// 获取收货地址
 	$.ajax({
 			url : "/Selisse/getAgentAddress",
@@ -64,13 +71,16 @@
 				}
 				var type = (localStorage.getItem("userType") == "a" ? "A" : "总");
 				var price = (type == "A" ? item.aPrice: item.zongPrice);
-				$("<div class='product'><div class='productImg'>"+
-						"<a href='productDetail.html?productID=" + item.ID +
-						"'><img src='/Selisse/" + item.imgSrc + "' /></a></div>"+
-						"<div class='productName'>" + item.name + "</div>"+
-						"<div class='price'>"+type+"代价："+price+"元</div>"+
-						"<div class='buy-amount'>订购数量：<span class='jian' onclick='jian(this)'>-</span><input oninput='OnInput (event)' onpropertychange='OnPropChanged (event)' data-price='"+price+"' data-productID='"+item.ID+"' type='text' value='0'/><span class='jia' onclick='jia(this,\""+price+"\",\""+item.ID+"\",\""+item.type+"\")'>+</span></div></div>").appendTo(productContainer);
-				proBuy[item.ID] = 0;
+				if(item.name.indexOf("套装") <=-1 && item.name.indexOf("系列") <= -1){
+					// 取消套装的下单
+					$("<div class='product'><div class='productImg'>"+
+							"<a href='productDetail.html?productID=" + item.ID +
+							"'><img src='/Selisse/" + item.imgSrc + "' /></a></div>"+
+							"<div class='productName'>" + item.name + "</div>"+
+							"<div class='price'>"+type+"代价："+price+"元</div>"+
+							"<div class='buy-amount'>订购数量：<span class='jian' onclick='jian(this)'>-</span><input oninput='OnInput (event)' onpropertychange='OnPropChanged (event)' data-price='"+price+"' data-productID='"+item.ID+"' type='text' value='0'/><span class='jia' onclick='jia(this,\""+price+"\",\""+item.ID+"\",\""+item.type+"\")'>+</span></div></div>").appendTo(productContainer);
+					proBuy[item.ID] = 0;
+				}
 			});
 		}
 	});
@@ -121,7 +131,7 @@
 	}
 	
 	function dealXiaoyang(){
-		if(totalPrice>=1){
+		if(totalPrice>=3000){
 			$("#xiaoyang-container").show();
 			$("#wuliao-container").show();
 		}else{
@@ -151,34 +161,23 @@
 						mobile: $("#mobile").html(),
 						amount: totalPrice,
 						products: JSON.stringify(proBuy),
+						express: exprArr[$("#express_choose").val()],
 						samples: "",
 						wuliao: "",
-						charges: "8"
+						charges: "0"
 					},
 					success: function(data){
 						if(data == "000000"){
 							alert("结算成功，可在订单查询里查询，稍后跟单会为您发货！");
-
 							// 更新余额
-							$.ajax({
-								url: "/Selisse/updateAgentInfo",
-								type: "post",
-								data: "agentID=" + localStorage.getItem("userID") + "&value=" + (localStorage.getItem("userBalance") - totalPrice) + "&type=balance",
-								success: function(data){
-									if(data == "000000"){
-										alert("余额已更新，请刷新页面查看！");
-									}else{
-										alert("余额更新失败！");
-									}
-								}
-							});
+							Common.updateBalance(localStorage.getItem("userBalance") - totalPrice);
 						}else{
 							alert("结算失败，请联系小明！");
 						}
 					}
 				});
 			}else{
-				alert("余额不足，请联系大管家充值！");
+				alert("余额不足，请联系诗轩小秘书充值！");
 			}
 		}
 	});

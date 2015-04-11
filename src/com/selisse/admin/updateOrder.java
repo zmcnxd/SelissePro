@@ -54,8 +54,9 @@ public class updateOrder extends HttpServlet {
 		PrintWriter outer = response.getWriter();			
 		String orderID = request.getParameter("orderID");
 		String expressNo = request.getParameter("expressNo");
+		String charges = request.getParameter("charges");
 		String status = request.getParameter("status");
-		boolean result = common.updateOrder(orderID,expressNo,status);
+		boolean result = common.updateOrder(orderID,expressNo,status,charges);
 		outer.write(result ? "000000" : "999999");
 	}
 

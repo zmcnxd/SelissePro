@@ -14,12 +14,20 @@
 	padding: 20px;
 	background: #ececec;
 }
+.del-td{
+	height: 40px;	
+}
+.gray-btn{
+	background: #ddd;
+	padding: 5px 10px;
+	
+}
 </style>
-<div><a id="add_addr" href="javascript:" class="blue">添加收货人</a></div>
+<div><a id="add_addr" href="javascript:" class="blue ui-btn">添加收货人</a></div>
 <table class="addr_arr">
 	<thead>
 		<tr>
-			<td><a class="del_addr" href="javascript:">删除此收货人</a></td>
+			<td class='del-td'><a class="del_addr gray-btn" href="javascript:">删除此收货人</a></td>
 			<td></td>
 		</tr>
 	</thead>
@@ -39,7 +47,7 @@
 	</tbody>
 </table>
 
-<a class="ui-btn">保存</a>
+<a id="save_address" class="ui-btn">保存</a>
 
 <script type="text/javascript">
 	$(function(){
@@ -62,7 +70,7 @@
 		
 		
 		
-		$(".ui-btn").click(function(){
+		$("#save_address").click(function(){
 			var nameArr = [],mobileArr = [],addrArr = [];
 			// 格式检查
 			var right = true;

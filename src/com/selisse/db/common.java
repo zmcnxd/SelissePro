@@ -201,8 +201,8 @@ public class common {
 		return false;
 	}
 	
-	public static boolean updateOrder(String orderID,String expressNo,String status){
-		String sql = "update orders set express_no='" + expressNo + "',status='" + status + "' where ID=" + orderID;
+	public static boolean updateOrder(String orderID,String expressNo,String status,String charges){
+		String sql = "update orders set express_no='" + expressNo + "',status='" + status + "',charges='"+charges+"' where ID=" + orderID;
 		return executeUpdate(sql);
 	}
 	
@@ -598,7 +598,8 @@ public class common {
 	 * @return
 	 */
 	public static String getNowDate(){
-		SimpleDateFormat partern = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		//SimpleDateFormat partern = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");// 12小时制
+		SimpleDateFormat partern = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 24小时制
 		Date now = new Date();
 		return partern.format(now);
 	}
@@ -981,8 +982,8 @@ public class common {
 	 * @param charges
 	 * @return
 	 */
-	public static boolean addOrder(String name,String reciver,String address,String mobile,String amount,String products,String samples,String wuliao,String charges){
-		String sql = "insert into orders([name],[time],[reciver],[address],[mobile],[amount],[products],[samples],[wuliao],[express],[charges]) values('"+name+"','" + getNowDate() +"','"+reciver+"','"+address+"','"+mobile+"','"+amount+"','"+products+"','"+samples+"','"+wuliao+"','申通','"+charges+"')";
+	public static boolean addOrder(String name,String reciver,String address,String mobile,String amount,String products,String samples,String wuliao,String charges,String express){
+		String sql = "insert into orders([name],[time],[reciver],[address],[mobile],[amount],[products],[samples],[wuliao],[express],[charges]) values('"+name+"','" + getNowDate() +"','"+reciver+"','"+address+"','"+mobile+"','"+amount+"','"+products+"','"+samples+"','"+wuliao+"','"+express+"','"+charges+"')";
 		return executeInsert(sql);
 	}
 	
@@ -991,7 +992,7 @@ public class common {
 	 * @return
 	 */
 	public static List getOrders(String userName){
-		String sql = (StringUtils.isEmpty(userName) ? "select * from orders" : "select * from orders where name = '" + userName + "'");
+		String sql = (StringUtils.isEmpty(userName) ? "select * from orders" : "select * from orders where name = '" + userName + "' order by time desc");
 		return executeQuery(sql);
 	}
 	

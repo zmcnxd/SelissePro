@@ -89,3 +89,29 @@ if (!Array.prototype.forEach) {
         }  
     };  
 }
+
+// 公用方法
+Common = {
+		//更新余额
+		updateBalance: function(balance,successCallBack,failCallBack){
+			$.ajax({
+				url: "/Selisse/updateAgentInfo",
+				type: "post",
+				data: "agentID=" + localStorage.getItem("userID") + "&value=" + balance + "&type=balance",
+				success: function(data){
+					if(data == "000000"){
+						localStorage.setItem("userBalance",balance);
+						successCallBack();
+					}else{
+						failCallBack();
+					}
+				}
+			});
+		},
+		// 数据库时间对象转化为字符串
+		timeToString: function(time){
+			var strtime = new Date(time);
+			return strtime.Format("yyyy-MM-dd hh:mm:ss");
+		}
+}
+

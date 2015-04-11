@@ -1,5 +1,5 @@
 @CHARSET "UTF-8";
-*{margin:0px;padding:0px;font-family: microsoft yahei;}
+*{margin:0px;padding:0px;font-family: microsoft yahei;font-size: 12px;}
 .manage_left{float:left;width:230px;margin-right:10px;color: #fff;width: 20%;}
 .manage_right{float:left;width:800px;background: #fff;width: 75%;}
 .manage_left ul.left_banner li{list-style:none;padding-left: 20px;line-height: 30px;}
@@ -9,7 +9,9 @@
 .login-form table tr td{padding: 10px;}
 .login-form table tr td input{padding: 3px;}
 .login-form .login-btn{margin: 45px 0 0 98px;}
-.ui-btn{background:#72ab15;color: #fff;padding: 11px 19px;cursor: pointer;border-radius: 5px;}
+.ui-btn{background:#72ab15;color: #fff;padding: 11px 19px;cursor: pointer;border-radius: 5px;text-decoration: none;}
+.gray-btn{background:#ececec;color: #333;padding: 11px 19px;cursor: pointer;border-radius: 5px;text-decoration: none;}
+
 .admin-index{background-color: #000;}
 .modify-pasword table tr td{padding: 10px;}
 .modify-password table tr td input{padding: 3px;}

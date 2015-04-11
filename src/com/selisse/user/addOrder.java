@@ -57,6 +57,7 @@ public class addOrder extends HttpServlet {
 		String name = request.getParameter("name");
 		String reciver = request.getParameter("reciver");
 		String address = request.getParameter("address");
+		String express = request.getParameter("express");
 		String mobile = request.getParameter("mobile");
 		String amount = request.getParameter("amount");
 		String products = request.getParameter("products");
@@ -64,7 +65,7 @@ public class addOrder extends HttpServlet {
 		String wuliao = request.getParameter("wuliao");
 		String charges = request.getParameter("charges");
 		
-		boolean isSuccess = common.addOrder(name,reciver,address,mobile,amount,products,samples,wuliao,charges);
+		boolean isSuccess = common.addOrder(name,reciver,address,mobile,amount,products,samples,wuliao,charges,express);
 		try{
 			// 分析订单，更新库存
 			JSONObject jObject = JSONObject.fromObject(products);

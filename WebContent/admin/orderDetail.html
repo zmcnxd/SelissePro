@@ -14,9 +14,7 @@ td{padding: 10px;}
 <table>
 	<tr><td>用户名：</td><td><span id="name"></span></td></tr>
 	<tr><td>下单时间：</td><td><span id="time"></span></td></tr>
-	<tr><td>收货人：</td><td><span id="reciver"></span></td></tr>
-	<tr><td>地址：</td><td><span id="address"></span></td></tr>
-	<tr><td>手机：</td><td><span id="mobile"></span></td></tr>
+	<tr><td>收货地址：</td><td><span id="address"></span></td></tr>
 	<tr><td>金额：</td><td><span id="amount"></span></td></tr>
 	<tr><td>产品正装：</td><td><span id="products"></span></td></tr>
 	<tr><td>小样：</td><td><span id="xiaoyang"></span></td></tr>
@@ -28,13 +26,14 @@ td{padding: 10px;}
 	
 </table>
 <div style="margin: 30px;">
-<a class="ui-btn">确定</a>
+<a id="confirm_send" class="ui-btn">确定发货</a>
 </div>
 <script type="text/javascript">
-	if(getPara("from") == "agent"){
+	var isAdmin = false;
+	if(localStorage.getItem("userType") != "m"){
 		$(".ui-btn").hide();
-		$("#express_no").attr("readonly","true");
-		
+	}else{
+		isAdmin = true;
 	}
 	
 	var zhongtong = 'https://www.baidu.com/s?wd=%E4%B8%AD%E9%80%9A&rsv_spt=1&issp=1&f=8&rsv_bp=0&rsv_idx=2&ie=utf-8&tn=baiduhome_pg&rsv_enter=1&rsv_sug3=8&rsv_sug1=2';
@@ -47,15 +46,21 @@ td{padding: 10px;}
 		data: "orderID=" + getPara("orderID"),
 		success: function(data){
 			$("#name").html(data.name);
-			$("#time").html(data.time);
-			$("#reciver").html(data.reciver);
+			$("#time").html(Common.timeToString(data.time.time));
 			$("#address").html(data.address);
-			$("#mobile").html(data.mobile);
 			$("#amount").html(data.amount);
-			$("#express").html(data.express);
-			$("#express_no").html(data.express_no+"&nbsp;&nbsp;<a target='_blank' href='"+(data.express=="中通"?zhongtong:shentong)+"'>查询快递详情</a>");
-			$("#charges").html(data.charges);
-			$("#status").html(data.status==0?"未发货":"已发货");
+			$("#express").html(isAdmin?"<input type='text' value='"+data.express+"' />":data.express);
+			$("#express_no").html(isAdmin?("<input type='text' value='"+(data.express_no?data.express_no:"")+"' />"):(data.express_no?data.express_no+"&nbsp;&nbsp;<a target='_blank' href='"+(data.express=="中通"?zhongtong:shentong)+"'>查询快递详情</a>":""));
+			$("#charges").html(isAdmin?"<input type='text' value='"+(data.charges?data.charges:"")+"' />":data.charges);
+			if(isAdmin){
+				if(data.status==0){
+					$("input[name='status']").get(0).checked = true;
+				}else{
+					$("input[name='status']").get(1).checked = true;
+				}
+			}else{
+				$("#status").html(data.status==0?"未发货":"已发货");
+			}
 			var productArr = $.parseJSON(data.products);
 			// 获取订单产品
 			$.ajax({
@@ -79,8 +84,9 @@ td{padding: 10px;}
 		}
 	});
 	
-	$(".ui-btn").click(function(){
-		var expressNo = $("#express_no").val();
+	$("#confirm_send").click(function(){
+		var expressNo = $("#express_no input").val();
+		var charges = $("#charges input").val();
 		var status = $("#status input").get(0).checked ? 0 : 1;
 		$.ajax({
 			url: "/Selisse/updateOrder",
@@ -88,11 +94,18 @@ td{padding: 10px;}
 			data: {
 				orderID: getPara("orderID"),
 				expressNo: expressNo,
+				charges: charge,
 				status: status
 			},
 			success: function(data){
 				if(data == "000000"){
-					alert("更新成功！")
+					if(charges > 0){
+						Common.updateBalance(localStorage.getItem("userBalance") - charges,function(){
+							alert("更新订单成功，快递费已从代理余额中扣除！");
+						},function(){
+							alert("扣除快递费失败！");
+						});
+					}
 				}else{
 					alert("更新失败！");
 				}

@@ -9,6 +9,7 @@
 <body>
 <style>
 thead td{background:#999;color:#fff;padding: 10px 50px;}
+tbody td{text-align: center;padding: 20px 0;}
 </style>
 <table>
 	<thead>
@@ -30,7 +31,7 @@ thead td{background:#999;color:#fff;padding: 10px 50px;}
 		dataType: "json",
 		success: function(data){
 			data.forEach(function(item){
-				$("<tr><td>"+item.ID+"</td><td>"+item.name+"</td><td>"+(item.status==0?"未发货":"已发货")+"</td><td><a href='orderDetail.html?orderID="+item.ID+"'>订单详情</a></td></tr>").appendTo($("tbody"));	
+				$("<tr><td>"+item.ID+"</td><td>"+item.name+"</td><td>"+(item.status==0?"未发货":"已发货")+"</td><td><a class='gray-btn' href='orderDetail.html?orderID="+item.ID+"'>订单详情</a></td></tr>").appendTo($("tbody"));	
 			});
 		}
 	})
