@@ -239,7 +239,7 @@ public class common {
 	        properties.setProperty("charSet", "gbk") ;
 			conn = DriverManager.getConnection(accessURL,properties);
 			Statement stmt = conn.createStatement();
-			String sql = "INSERT INTO [product] ([name],[type],[imgSrc],[content],[order],[guige],[zongPrice],[aPrice],[amount],[last-in-time],[last-update-time]) VALUES('" + name + "','" + product_type + "','" + imgSrc + "','"+content+"','"+order+"','"+guige+"','"+zong_price+"','"+a_price+"','"+amount+"','"+(StringUtils.isEmpty(last_in_time) ? getNowDate() : last_in_time)+"','"+(StringUtils.isEmpty(last_update_time) ? getNowDate() : last_update_time)+"')";
+			String sql = "INSERT INTO [product] ([name],[type],[imgSrc],[content],[order],[guige],[zongPrice],[aPrice],[amount],[last_in_time],[last_update_time]) VALUES('" + name + "','" + product_type + "','" + imgSrc + "','"+content+"','"+order+"','"+guige+"','"+zong_price+"','"+a_price+"','"+amount+"','"+(StringUtils.isEmpty(last_in_time) ? getNowDate() : last_in_time)+"','"+(StringUtils.isEmpty(last_update_time) ? getNowDate() : last_update_time)+"')";
 			stmt.execute(sql);
 			conn.close();
 			return true;

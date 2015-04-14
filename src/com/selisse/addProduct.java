@@ -104,7 +104,7 @@ public class addProduct extends HttpServlet {
 	            	}
 	            }
   
-            response.getWriter().println("成功了,棒棒哒!!!");//终于成功了,还不到你的上传文件中看看,你要的东西都到齐了吗
+            //response.getWriter().println("成功了,棒棒哒!!!");//终于成功了,还不到你的上传文件中看看,你要的东西都到齐了吗
 
     		boolean isSuccess = common.addProduct(product_name,product_type, img_path,content, order, guige,zong_price,a_price,amount,last_in_time,last_update_time);
     		out.write((isSuccess ? "成功了,棒棒哒 返回码:000000" : "上传失败 返回码:999999"));
