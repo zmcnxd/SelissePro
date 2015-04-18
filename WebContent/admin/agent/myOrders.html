@@ -34,10 +34,36 @@ tbody td{text-align: center;padding: 20px 0;}
 		data: "userName=" + localStorage.getItem("userName"),
 		success: function(data){
 			data.forEach(function(item){
-				$("<tr><td>"+item.ID+"</td><td>"+item.name+"</td><td>"+(item.status==0?"未发货":"已发货")+"</td><td>"+Common.timeToString(item.time)+"</td><td><a class='gray-btn' href='../orderDetail.html?orderID="+item.ID+"&from=agent'>订单详情</a></td></tr>").appendTo($("tbody"));	
+				$("<tr><td>"+item.ID+"</td><td>"+item.name+"</td><td>"+
+						(item.status==0?"未发货":"已发货")+"</td><td>"+
+						Common.timeToString(item.time)+
+						"</td><td><a class='gray-btn' href='../orderDetail.html?orderID="+
+						item.ID+"&from=agent'>订单详情</a>"+
+						(item.status==0?"&nbsp;&nbsp;<a class='gray-btn' onclick='delOrder(\""+item.ID+"\")'>删除</a>":"")+
+						"</td></tr>").appendTo($("tbody"));	
 			});
 		}
-	})
+	});
+	
+	// 删除订单
+	function delOrder(id){
+		if(confirm("确认删除？")){
+			$.ajax({
+				url: "/Selisse/delOrder",
+				type: "post",
+				dataType: "json",
+				data: "orderID=" + id,
+				success: function(json){
+					if(json == '000000'){
+						alert("删除成功！");
+						window.location.reload();
+					}else{
+						alert("删除失败！");
+					}
+				}
+			});
+		}
+	}
 </script>
 </body>
 </html>

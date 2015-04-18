@@ -536,6 +536,16 @@ public class common {
 		return false;
 	}
 	
+	/**
+	 * 删除订单
+	 * @param orderID
+	 * @return
+	 */
+	public static boolean delOrder(String orderID){
+		String sql = "delete from orders where ID=" + orderID;
+		return executeDelete(sql);
+	}
+	
 	public static boolean deleteProduct(String id){
 		Connection conn = null;
 		try {
