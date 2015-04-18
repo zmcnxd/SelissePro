@@ -173,6 +173,10 @@
     	<servlet-name>getAgentAddress</servlet-name>
     	<servlet-class>com.selisse.user.getAgentAddress</servlet-class>
 	</servlet>
+	<servlet>
+    	<servlet-name>isBindAgent</servlet-name>
+    	<servlet-class>com.selisse.isBindAgent</servlet-class>
+	</servlet>
 	
 	<servlet-mapping>
     	<servlet-name>getProductSort</servlet-name>
@@ -353,5 +357,10 @@
 	<servlet-mapping>
     	<servlet-name>getAgentAddress</servlet-name>
     	<url-pattern>/getAgentAddress</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+    	<servlet-name>isBindAgent</servlet-name>
+    	<url-pattern>/isBindAgent</url-pattern>
 	</servlet-mapping>
 </web-app>

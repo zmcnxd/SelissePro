@@ -896,6 +896,21 @@ public class common {
 	}
 	
 	/**
+	 * 判断用户是否已经绑定过
+	 * @param openID
+	 * @param weixinNo
+	 * @return
+	 */
+	public static String isbindAgent(String openID){
+		String sql = "select * from agents where openID='" + openID + "'";
+		List result = executeQuery(sql);
+		if(result.size() > 0){
+			return "1";
+		}
+		return "0";
+	}
+	
+	/**
 	 * 用户登录
 	 * @param username
 	 * @param password

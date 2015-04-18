@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 
 import com.selisse.db.common;
@@ -22,7 +21,7 @@ import com.selisse.db.common;
  * @author Administrator
  * 
  */
-public class getProduct extends HttpServlet {
+public class isBindAgent extends HttpServlet {
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		// TODO Auto-generated method stub
@@ -34,17 +33,10 @@ public class getProduct extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		String sortID = request.getParameter("sortID");
-		String type = request.getParameter("type");
-		String jsonp=request.getParameter("jsonpcallback");
-		// �����ز�Ʒ
-		List products = common.getProduct(sortID,type);
-		JSONArray productArr = new JSONArray(products);
-		if(StringUtils.isNotEmpty(jsonp)){
-			out.write(jsonp+"("+productArr.toString()+")");
-		}else{
-			out.write(productArr.toString());
-		}
+		// ����������
+		String openID = request.getParameter("openID");
+		String result = common.isbindAgent(openID);
+		out.write(result);
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
