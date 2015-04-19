@@ -304,27 +304,23 @@ public class common {
 		return null;
 	}
 	
-	public static JSONObject getAgentDetail(String agentID) {
-		Connection conn = null;
-		try {
-			Class.forName(accessdriver);
-			Properties properties = new Properties() ;  
-	        properties.setProperty("charSet", "gbk") ;
-			conn = DriverManager.getConnection(accessURL,properties);
-			Statement stmt = conn.createStatement(
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
-			String sql = "select * from agents where ID =" + agentID + "";
-			ResultSet rs = stmt.executeQuery(sql);
-			List resultList = resultSetToList(rs);
-			conn.close();
-			JSONObject jObject = JSONObject.fromObject(resultList.get(0));
-			return jObject;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	/**
+	 * 获取代理详细信息
+	 * @param type
+	 * @param value
+	 * @return
+	 */
+	public static JSONObject getAgentDetail(String type,String value) {
+		String sql = "";
+		if(type.equals("openid")){
+			sql = "select * from agents where openid='"+value+"'";
+		}else{
+			sql = "select * from agents where ID =" + value + "";
 		}
-		return null;
+
+		List resultList = executeQuery(sql);
+		JSONObject jObject = JSONObject.fromObject(resultList.get(0));
+		return jObject;
 	}
 	
 	/**

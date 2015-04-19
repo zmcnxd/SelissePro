@@ -14,12 +14,9 @@
 </div><br /><br />
 
 <div id="xiaoyang-container" class="product-container" style="display: none;clear:left;">
-<h3>小样</h3>
+<h3>小样物料</h3>
 </div><br /><br />
 
-<div id="wuliao-container" class="product-container" style="display: none;clear:left;">
-<h3>物料</h3>
-</div>
 <div class="address" style="clear: left;margin: 30px 10px;background: #ececec;padding: 10px;font-size: 12px;">
 
 </div>
@@ -87,7 +84,6 @@
 	
 	var totalPrice = 0;
 	var xiaoyangTotalPrice = 0;
-	var wuliaoTotalPrice = 0;
 	// Firefox, Google Chrome, Opera, Safari, Internet Explorer from version 9
     function OnInput (event) {
     	countAmount();
@@ -99,7 +95,7 @@
 	
 	function countAmount(){
 		// 重新计算下金额
-		totalPrice=xiaoyangTotalPrice=wuliaoTotalPrice=0;
+		totalPrice=xiaoyangTotalPrice=0;
 		$("#product-container .product,#xiaoyang-container .product,#wuliao-container .product").each(function(){
 			var input = $(this).find(".buy-amount input");
 			var price = input.attr("data-price");
@@ -111,9 +107,6 @@
 			}
 			if($(this).parent().attr("id") == "xiaoyang-container"){
 				xiaoyangTotalPrice += price * orderNum;
-			}
-			if($(this).parent().attr("id") == "wuliao-container"){
-				wuliaoTotalPrice += price * orderNum;
 			}
 			dealXiaoyang();
 		});
@@ -133,19 +126,15 @@
 	function dealXiaoyang(){
 		if(totalPrice>=3000){
 			$("#xiaoyang-container").show();
-			$("#wuliao-container").show();
 		}else{
 			$("#xiaoyang-container").hide();
-			$("#wuliao-container").hide();
 		}
 	}
 	
 	$(".buy-confirm a").click(function(){
-		
-		
 		if(confirm("点击确认将生成订单详情，确认后将不可编辑，只可删除订单，请再次确认")){
 			// 小样和物料总额不能超过正装订单金额的5%
-			if((xiaoyangTotalPrice+wuliaoTotalPrice) > totalPrice * 0.05){
+			if(xiaoyangTotalPrice > totalPrice * 0.05){
 				alert("小样和物料总额不能超过正装订单金额的5%");
 				return;
 			}

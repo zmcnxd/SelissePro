@@ -36,9 +36,19 @@ public class getAgentDetail extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		String agentID = request.getParameter("agentID");
-		// ����������
-		JSONObject newsDetail = common.getAgentDetail(agentID);
-		out.write(newsDetail.toString());
+		String openid = request.getParameter("openid");
+		String type = request.getParameter("type");
+		String value = "";
+		JSONObject agentDetail = new JSONObject();
+		if(type.equals("openid")){
+			value = openid;
+		}
+		else{
+			value = agentID;
+		}
+
+		agentDetail = common.getAgentDetail(type,value);
+		out.write(agentDetail.toString());
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
