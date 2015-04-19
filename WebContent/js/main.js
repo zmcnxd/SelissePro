@@ -108,6 +108,33 @@ Common = {
 				}
 			});
 		},
+		// 删除订单
+		delOrder: function(id,charges,successCall){
+			if(confirm("确认删除？")){
+				$.ajax({
+					url: "/Selisse/delOrder",
+					type: "post",
+					dataType: "json",
+					data: "orderID=" + id,
+					success: function(json){
+						if(json == '000000'){
+							alert("删除成功！");
+							// 更新余额
+							Common.updateBalance(parseFloat(localStorage.getItem("userBalance")) + parseFloat(charges),function(){
+								if(successCall){
+									successCall();
+								}else{
+									window.location.reload();
+								}
+							});
+							
+						}else{
+							alert("删除失败！");
+						}
+					}
+				});
+			}
+		},
 		// 数据库时间对象转化为字符串
 		timeToString: function(time){
 			var strtime = new Date(time);

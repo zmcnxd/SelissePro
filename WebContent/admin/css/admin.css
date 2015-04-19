@@ -12,6 +12,8 @@
 .ui-btn{background:#72ab15;color: #fff;padding: 11px 19px;cursor: pointer;border-radius: 5px;text-decoration: none;}
 .gray-btn{background:#ececec;color: #333;padding: 11px 19px;cursor: pointer;border-radius: 5px;text-decoration: none;}
 
+.warn{color: red;}
+
 .admin-index{background-color: #000;}
 .modify-pasword table tr td{padding: 10px;}
 .modify-password table tr td input{padding: 3px;}

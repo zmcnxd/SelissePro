@@ -28,7 +28,7 @@
 	<a class="ui-btn">确认并结算</a>
 </div>
 <script type="text/javascript">
-	var exprArr = ['申通','中通','顺丰','EMS','圆通','韵达','百世汇通','宅急送','天天','德邦物流','新邦物流','天地华宇'];
+	var exprArr = ['申通','中通','顺丰','EMS','圆通','韵达','百世汇通','宅急送','天天','德邦物流','新邦物流','天地华宇','其他'];
 	for(var index=0;index<exprArr.length;index++){
 		$("#express_choose").append("<option value='"+index+"'>"+exprArr[index]+"</option>");
 	}
@@ -53,7 +53,7 @@
 	// 产品订购数量对象
 	var proBuy = {};
 	var productContainer = null;
-	// 获取所有正装产品
+	// 获取所有产品，正装和小样物料
 	$.ajax({
 		url : "/Selisse/getProduct",
 		dataType : "json",
@@ -75,7 +75,11 @@
 							"'><img src='/Selisse/" + item.imgSrc + "' /></a></div>"+
 							"<div class='productName'>" + item.name + "</div>"+
 							"<div class='price'>"+type+"代价："+price+"元</div>"+
-							"<div class='buy-amount'>订购数量：<span class='jian' onclick='jian(this)'>-</span><input oninput='OnInput (event)' onpropertychange='OnPropChanged (event)' data-price='"+price+"' data-productID='"+item.ID+"' type='text' value='0'/><span class='jia' onclick='jia(this,\""+price+"\",\""+item.ID+"\",\""+item.type+"\")'>+</span></div></div>").appendTo(productContainer);
+							(item.amount<=0?"<span class='warn'>已断货</span>":
+							"<div class='buy-amount'>订购数量：<span class='jian' onclick='jian(this)'>-</span>"+
+							"<input oninput='OnInput (event)' onpropertychange='OnPropChanged (event)' data-price='"+price+
+							"' data-productID='"+item.ID+"' type='text' value='0'/><span class='jia' onclick='jia(this,\""+price+
+							"\",\""+item.ID+"\",\""+item.type+"\")'>+</span></div></div>")).appendTo(productContainer);
 					proBuy[item.ID] = 0;
 				}
 			});
@@ -138,6 +142,13 @@
 				alert("小样和物料总额不能超过正装订单金额的5%");
 				return;
 			}
+			
+			// 必须要选择产品
+			if(totalPrice <= 0){
+				alert("请选择产品！");
+				return;
+			}
+			
 			if(localStorage.getItem("userBalance") >= totalPrice){
 				// 生成订单
 				$.ajax({
@@ -159,7 +170,11 @@
 						if(data == "000000"){
 							alert("结算成功，可在订单查询里查询，稍后跟单会为您发货！");
 							// 更新余额
-							Common.updateBalance(localStorage.getItem("userBalance") - totalPrice);
+							Common.updateBalance(localStorage.getItem("userBalance") - totalPrice,function(){
+								window.location.href = "/admin/orders.html";
+							},function(){
+								alert("余额更新失败，请联系管理员！");
+							});
 						}else{
 							alert("结算失败，请联系小明！");
 						}

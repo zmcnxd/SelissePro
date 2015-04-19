@@ -26,7 +26,7 @@ td{padding: 10px;}
 	
 </table>
 <div style="margin: 30px;">
-<a id="confirm_send" class="ui-btn">确定发货</a>
+<a id="confirm_send" class="ui-btn">确定发货</a>&nbsp;&nbsp;<a id="del_order" class="gray-btn">删除订单</a>
 </div>
 <script type="text/javascript">
 	var isAdmin = false;
@@ -60,7 +60,16 @@ td{padding: 10px;}
 				}
 			}else{
 				$("#status").html(data.status==0?"未发货":"已发货");
+				$("#del_order").css("display",(data.status==0?"":"none"));
 			}
+			
+			// 删除订单
+			$("#del_order").click(function(){
+				Common.delOrder(getPara("orderID"),data.charges,function(){
+					window.location.href = "/admin/orders.html";
+				});
+			});
+			
 			var productArr = $.parseJSON(data.products);
 			// 获取订单产品
 			$.ajax({
@@ -84,6 +93,7 @@ td{padding: 10px;}
 		}
 	});
 	
+	// 确认发货
 	$("#confirm_send").click(function(){
 		var expressNo = $("#express_no input").val();
 		var charges = $("#charges input").val();
@@ -112,6 +122,7 @@ td{padding: 10px;}
 			}
 		});
 	});
+	
 	
 </script>
 </body>
