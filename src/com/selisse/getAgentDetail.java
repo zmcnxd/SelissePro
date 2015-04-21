@@ -40,10 +40,11 @@ public class getAgentDetail extends HttpServlet {
 		String type = request.getParameter("type");
 		String value = "";
 		JSONObject agentDetail = new JSONObject();
-		if(type.equals("openid")){
+		if(null != type && type.equals("openid")){
 			value = openid;
 		}
 		else{
+			type = "agentID";
 			value = agentID;
 		}
 
