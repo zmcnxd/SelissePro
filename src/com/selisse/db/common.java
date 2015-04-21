@@ -41,7 +41,7 @@ public class common {
 	public static File saveDir = new File(rootPath + "upload/");//初始化上传文件后的保存目录  
     
 	// 查询
-	private static List executeQuery(String sql){
+	public static List executeQuery(String sql){
 		Connection conn = null;
 		try {
 			Class.forName(accessdriver);
@@ -1017,8 +1017,15 @@ public class common {
 		return executeQuery(sql);
 	}
 	
+	// 减少库存
 	public static void updateProductAmount(String id,String val){
 		String sql = "update product set amount = amount - " + val + " where id="+id;
+		executeUpdate(sql);
+	}
+	
+	// 增加库存
+	public static void addProductAmount(String id,String val){
+		String sql = "update product set amount = amount + " + val + " where id="+id;
 		executeUpdate(sql);
 	}
 	

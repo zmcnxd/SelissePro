@@ -34,21 +34,31 @@
 	}
 	// 获取收货地址
 	$.ajax({
-			url : "/Selisse/getAgentAddress",
-			data : "userID=" + localStorage.getItem("userID"),
-			dataType : "json",
-			success : function(data){
-				if(data.length==0){
-					alert("没有设置收货地址，不能订货，请先设置收货地址!");
-					window.location.href = "/Selisse/admin/agent/setAddress.html";
-					return;
-				}
-				for(var index=0;index<data.length;index++){
-					$(".address").append('<p><input type="radio" data-addr-text="'+data[index].name+','+data[index].mobile+','+data[index].addr+'" value="'+index+'"'+(index==0?' checked':'')+'  name="addr"/>收货人姓名：<span id="reciver">'+data[index].name+'</span>&nbsp;&nbsp;'
-					+'电话：<span id="mobile">'+data[index].mobile+'</span>&nbsp;&nbsp;收货地址：<span id="addr">'+data[index].addr+'</span></p>');
-				}
+		url : "/Selisse/getAgentAddress",
+		data : "userID=" + localStorage.getItem("userID"),
+		dataType : "json",
+		success : function(data){
+			if(data.length==0){
+				alert("没有设置收货地址，不能订货，请先设置收货地址!");
+				window.location.href = "/Selisse/admin/agent/setAddress.html";
+				return;
 			}
-		});
+			for(var index=0;index<data.length;index++){
+				$(".address").append('<p><input type="radio" data-addr-text="'+data[index].name+','+data[index].mobile+','+data[index].addr+'" value="'+index+'"'+(index==0?' checked':'')+'  name="addr"/>收货人姓名：<span id="reciver">'+data[index].name+'</span>&nbsp;&nbsp;'
+				+'电话：<span id="mobile">'+data[index].mobile+'</span>&nbsp;&nbsp;收货地址：<span id="addr">'+data[index].addr+'</span></p>');
+			}
+		}
+	});
+	
+	// 获取用户最新余额
+	$.ajax({
+		url : "/Selisse/getAgentDetail",
+		data : "agentID=" + localStorage.getItem("userID"),
+		dataType : "json",
+		success : function(data){
+			localStorage.setItem("userBalance",data.balance);
+		}
+	});
 	
 	// 产品订购数量对象
 	var proBuy = {};
@@ -102,17 +112,19 @@
 		totalPrice=xiaoyangTotalPrice=0;
 		$("#product-container .product,#xiaoyang-container .product,#wuliao-container .product").each(function(){
 			var input = $(this).find(".buy-amount input");
-			var price = input.attr("data-price");
-			var productID = input.attr("data-productID");
-			var orderNum = input.val();
-			proBuy[productID] = orderNum;
-			if($(this).parent().attr("id") == "product-container"){
-				totalPrice += price * orderNum;
+			if(input.length > 0){
+				var price = input.attr("data-price");
+				var productID = input.attr("data-productID");
+				var orderNum = input.val();
+				proBuy[productID] = orderNum;
+				if($(this).parent().attr("id") == "product-container"){
+					totalPrice += price * orderNum;
+				}
+				if($(this).parent().attr("id") == "xiaoyang-container"){
+					xiaoyangTotalPrice += price * orderNum;
+				}
+				dealXiaoyang();
 			}
-			if($(this).parent().attr("id") == "xiaoyang-container"){
-				xiaoyangTotalPrice += price * orderNum;
-			}
-			dealXiaoyang();
 		});
 	}
 	
@@ -171,7 +183,7 @@
 							alert("结算成功，可在订单查询里查询，稍后跟单会为您发货！");
 							// 更新余额
 							Common.updateBalance(localStorage.getItem("userBalance") - totalPrice,function(){
-								window.location.href = "/admin/orders.html";
+								window.location.href = "/admin/agent/myOrders.html";
 							},function(){
 								alert("余额更新失败，请联系管理员！");
 							});

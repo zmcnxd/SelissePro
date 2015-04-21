@@ -117,7 +117,9 @@ Common = {
 					dataType: "json",
 					data: "orderID=" + id,
 					success: function(json){
-						if(json == '000000'){
+					},
+					complete: function(json){
+						if(json.responseText == '000000'){
 							alert("删除成功！");
 							// 更新余额
 							Common.updateBalance(parseFloat(localStorage.getItem("userBalance")) + parseFloat(charges),function(){
@@ -127,7 +129,6 @@ Common = {
 									window.location.reload();
 								}
 							});
-							
 						}else{
 							alert("删除失败！");
 						}

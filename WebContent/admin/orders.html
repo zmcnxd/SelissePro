@@ -5,6 +5,7 @@
 <title>诗轩-后台</title>
 <link rel="stylesheet" type="text/css" href="css/admin.css">
 <script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/main.js"></script>
 </head>
 <body>
 <style>
@@ -32,7 +33,7 @@ tbody td{text-align: center;padding: 20px 0;}
 		dataType: "json",
 		success: function(data){
 			data.forEach(function(item){
-				$("<tr><td>"+item.ID+"</td><td><span>"+item.charges+"</span></td><td>"+item.name+"</td><td>"
+				$("<tr><td>"+item.ID+"</td><td><span>"+item.amount+"</span></td><td>"+item.name+"</td><td>"
 						+(item.status==0?"未发货":"已发货")
 						+"</td><td><a class='gray-btn' href='orderDetail.html?orderID="+item.ID
 						+"'>订单详情</a>&nbsp;&nbsp;<a class='gray-btn' onclick='Common.delOrder(\""+item.ID
