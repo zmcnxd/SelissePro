@@ -48,7 +48,7 @@ public class getAgentDetail extends HttpServlet {
 			value = agentID;
 		}
 
-		agentDetail = common.getAgentDetail(type,value);
+		agentDetail = common.getAgentDetail(type,value); 
 		out.write(agentDetail.toString());
 	}
 
