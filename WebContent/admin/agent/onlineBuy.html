@@ -85,10 +85,12 @@
 							"'><img src='/Selisse/" + item.imgSrc + "' /></a></div>"+
 							"<div class='productName'>" + item.name + "</div>"+
 							"<div class='price'>"+type+"代价："+price+"元</div>"+
+							"<div class='amount'>库存："+item.amount+"件</div>"+
 							(item.amount<=0?"<span class='warn'>已断货</span>":
 							"<div class='buy-amount'>订购数量：<span class='jian' onclick='jian(this)'>-</span>"+
 							"<input oninput='OnInput (event)' onpropertychange='OnPropChanged (event)' data-price='"+price+
-							"' data-productID='"+item.ID+"' type='text' value='0'/><span class='jia' onclick='jia(this,\""+price+
+							"' data-productID='"+item.ID+"' data-amount='"+item.amount+"' data-productName='"+item.name+
+							"' type='text' value='0'/><span class='jia' onclick='jia(this,\""+price+
 							"\",\""+item.ID+"\",\""+item.type+"\")'>+</span></div></div>")).appendTo(productContainer);
 					proBuy[item.ID] = 0;
 				}
@@ -107,7 +109,7 @@
     	countAmount();
     }
 	
-	function countAmount(){
+	function countAmount(){		
 		// 重新计算下金额
 		totalPrice=xiaoyangTotalPrice=0;
 		$("#product-container .product,#xiaoyang-container .product,#wuliao-container .product").each(function(){
@@ -116,6 +118,16 @@
 				var price = input.attr("data-price");
 				var productID = input.attr("data-productID");
 				var orderNum = input.val();
+				var productName = input.attr("data-productName");
+
+				// 不能大于这个产品的现在库存
+				var amount = input.attr("data-amount");
+				if(parseFloat(orderNum) > parseFloat(amount)){
+					alert("您订购的" + productName + "超过了库存，订购数量系统帮您修改成库存数，您可以重新输入订购件数！");
+					input.val(amount);
+					orderNum = amount;
+				}
+					
 				proBuy[productID] = orderNum;
 				if($(this).parent().attr("id") == "product-container"){
 					totalPrice += price * orderNum;
@@ -183,7 +195,7 @@
 							alert("结算成功，可在订单查询里查询，稍后跟单会为您发货！");
 							// 更新余额
 							Common.updateBalance(localStorage.getItem("userBalance") - totalPrice,function(){
-								window.location.href = "/admin/agent/myOrders.html";
+								window.location.href = "/Selisse/admin/agent/myOrders.html";
 							},function(){
 								alert("余额更新失败，请联系管理员！");
 							});

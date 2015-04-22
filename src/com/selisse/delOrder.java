@@ -39,7 +39,6 @@ public class delOrder extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		String orderID = request.getParameter("orderID");
-		boolean isSuccess = common.delOrder(orderID);
 		
 		try{
 			// 分析订单，更新(增加)库存
@@ -56,6 +55,11 @@ public class delOrder extends HttpServlet {
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
 		}
+		
+		// 删除订单
+		boolean isSuccess = common.delOrder(orderID);
+		
+		
 		
 		out.write((isSuccess ? "000000" : "999999"));
 	}

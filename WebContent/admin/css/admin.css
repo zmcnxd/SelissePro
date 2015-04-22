@@ -21,7 +21,7 @@
 #user_info{margin: 10px 0 20px 20px;border-bottom: solid 1px #fff;}
 .product-container{padding: 10px;}
 .product-container h3{padding: 5px;background: #ececec;}
-.product-container .product{float: left;margin: 20px;width: 260px;overflow: hidden;height: 170px;}
+.product-container .product{float: left;margin: 20px;width: 260px;overflow: hidden;height: 190px;line-height: 25px;}
 .product-container .product .buy-amount span{font-weight: bold;cursor: pointer;margin: 0 5px;}
 .product-container .product .buy-amount input{width: 30px;}
 .product-container .product .productImg img{width: 100px;}

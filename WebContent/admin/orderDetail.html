@@ -17,8 +17,7 @@ td{padding: 10px;}
 	<tr><td>收货地址：</td><td><span id="address"></span></td></tr>
 	<tr><td>金额：</td><td><span id="amount"></span></td></tr>
 	<tr><td>产品正装：</td><td><span id="products"></span></td></tr>
-	<tr><td>小样：</td><td><span id="xiaoyang"></span></td></tr>
-	<tr><td>物料：</td><td><span id="wuliao"></span></td></tr>
+	<tr><td>小样物料：</td><td><span id="xiaoyang"></span></td></tr>
 	<tr><td>快递：</td><td><span id="express"></span></td></tr>
 	<tr><td>快递费：</td><td><span id="charges"></span></td></tr>
 	<tr><td>快递单号：</td><td id="express_no"></td></tr>
@@ -82,8 +81,6 @@ td{padding: 10px;}
 								$("<strong>" + item.name + "</strong>&nbsp;&nbsp;" + productArr[item.ID] + "件<br />").appendTo($("#products"));
 							}else if(item.type == 2){
 								$("<strong>" + item.name + "</strong>&nbsp;&nbsp;" + productArr[item.ID] + "件<br />").appendTo($("#xiaoyang"));
-							}else if(item.type == 3){
-								$("<strong>" + item.name + "</strong>&nbsp;&nbsp;" + productArr[item.ID] + "件<br />").appendTo($("#wuliao"));
 							}
 							
 						}
