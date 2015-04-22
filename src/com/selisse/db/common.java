@@ -218,7 +218,7 @@ public class common {
 			if(!imgSrc.equals("")){
 				sql = "update product set content='" + content + "',[name]='"+name + "',[type]='"+product_type +"',imgSrc='"+imgSrc+"',[order]='" + order+"',guige='"+guige+"',zongPrice='"+zong_price+"',aPrice='"+zong_price+"',amount='"+amount+"',last_in_time'"+(StringUtils.isEmpty(last_in_time) ? getNowDate() : last_in_time)+"',last_update_time='"+(StringUtils.isEmpty(last_update_time) ? getNowDate() : last_update_time) + "' where ID=" + productID;
 			}else{
-				sql = "update product set content='" + content + "',[name]='"+name + "',[type]='"+product_type + "',[order]='" + order+"',guige='"+guige+"',zongPrice='"+zong_price+"',aPrice='"+a_price+"',amount='"+amount+"',last_in_time='"+(StringUtils.isEmpty(last_in_time) ? getNowDate() : last_in_time)+"',last_update_time='"+(StringUtils.isEmpty(last_update_time) ? getNowDate() : last_update_time) + "' where ID=" + productID;
+				sql = "update product set content='" + content + "',[name]='"+name + "',[type]='"+product_type + "',[order]='" + order+"',guige='"+guige+"',zongPrice='"+zong_price+"',aPrice='"+a_price+"',amount='"+amount+"',last_in_time='"+(StringUtils.isEmpty(last_in_time) ? getNowDate() : last_in_time)+"',last_update_time='" + getNowDate() + "' where ID=" + productID;
 			}
 			
 			stmt.executeUpdate(sql);
@@ -953,8 +953,10 @@ public class common {
 	 */
 	public static boolean updateAgentInfo(String agentID,String type,String value){
 		String sql = "";
-		if(type.equals("balance")){
-			sql = "update agents set balance='" + value + "' where ID=" + agentID + "";
+		if(type.equals("add")){
+			sql = "update agents set balance=balance+" + value + " where ID=" + agentID + "";
+		}else{
+			sql = "update agents set balance=balance-" + value + " where ID=" + agentID + "";
 		}
 		
 		return executeUpdate(sql);
@@ -1003,8 +1005,8 @@ public class common {
 	 * @param charges
 	 * @return
 	 */
-	public static boolean addOrder(String name,String reciver,String address,String mobile,String amount,String products,String samples,String wuliao,String charges,String express){
-		String sql = "insert into orders([name],[time],[reciver],[address],[mobile],[amount],[products],[samples],[wuliao],[express],[charges]) values('"+name+"','" + getNowDate() +"','"+reciver+"','"+address+"','"+mobile+"','"+amount+"','"+products+"','"+samples+"','"+wuliao+"','"+express+"','"+charges+"')";
+	public static boolean addOrder(String name,String agentID,String reciver,String address,String mobile,String amount,String products,String samples,String wuliao,String charges,String express){
+		String sql = "insert into orders([name],[agentID],[time],[reciver],[address],[mobile],[amount],[products],[samples],[wuliao],[express],[charges]) values('"+name+"','"+agentID+"','" + getNowDate() +"','"+reciver+"','"+address+"','"+mobile+"','"+amount+"','"+products+"','"+samples+"','"+wuliao+"','"+express+"','"+charges+"')";
 		return executeInsert(sql);
 	}
 	

@@ -77,7 +77,10 @@
 			data : "productID=" + productID,
 			dataType : "json",
 			success : function(data){
-				$("<div class='productLeft'><div><img src='" + data.imgSrc + "' /></div><div>" + data.name + "</div></div><div class='productRight'>"+decodeURIComponent(data.content)+"</div>").appendTo($(".rightContainer"));
+				$("<div class='productLeft'><div><img src='" + data.imgSrc +
+						"' /></div><div>" + data.name +
+						"</div></div><div class='productRight'>"+decodeURIComponent(data.content)+
+						"</div>").appendTo($(".rightContainer"));
 			}
 		});
 	});

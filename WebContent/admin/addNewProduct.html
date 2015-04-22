@@ -18,15 +18,16 @@ KindEditor.ready(function(K) {
 	});
 	editor.html("");
 	K('input[name=updateProduct]').click(function(e) {
+		var type = $("#product_type option:selected").val();
 		if($("#product_name").val()==""){
 			alert("不要忘了填写产品名称哟！");
 			return;
 		}
-		if($("#pic_url").val()==""){
+		if($("#pic_url").val()=="" && type == '1'){
 			alert("难道产品没有图片？");
 			return;
 		}
-		if(editor.html()==""){
+		if(editor.html()=="" && type == '1'){
 			alert("来点内容吧！");
 			return;
 		}
@@ -81,11 +82,11 @@ KindEditor.ready(function(K) {
 		</tr>
 		<tr>
 			<td>最后入库时间：</td>
-			<td><input type="text" id="last_in_time"  name="last_in_time" value=""/></td>
+			<td><input type="text" id="last_in_time"  name="last_in_time" value=""/>&nbsp;<span style="color: #999;">可不填，系统默认当前时间</span></td>
 		</tr>
 		<tr>
 			<td>最后更新时间：</td>
-			<td><input type="text" id="last_update_time"  name="last_update_time" value=""/></td>
+			<td><input type="text" id="last_update_time"  name="last_update_time" value=""/>&nbsp;<span style="color: #999;">可不填，系统默认当前时间</span></td>
 		</tr>
 	</table>
 	<p>

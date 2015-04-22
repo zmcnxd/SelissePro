@@ -92,15 +92,18 @@ if (!Array.prototype.forEach) {
 
 // 公用方法
 Common = {
+		isAdmin: localStorage.getItem("userType") == "m"?true:false,
 		//更新余额
-		updateBalance: function(balance,successCallBack,failCallBack){
+		updateBalance: function(type,balance,agentID,successCallBack,failCallBack){
 			$.ajax({
 				url: "/Selisse/updateAgentInfo",
 				type: "post",
-				data: "agentID=" + localStorage.getItem("userID") + "&value=" + balance + "&type=balance",
+				data: "agentID=" + agentID + "&value=" + balance + "&type=" + type,
 				success: function(data){
 					if(data == "000000"){
-						localStorage.setItem("userBalance",balance);
+						if(!Common.isAdmin){
+							localStorage.setItem("userBalance",balance);
+						}
 						successCallBack();
 					}else{
 						failCallBack();
@@ -109,7 +112,7 @@ Common = {
 			});
 		},
 		// 删除订单
-		delOrder: function(id,charges,successCall){
+		delOrder: function(id,agentID,charges,successCall){
 			if(confirm("确认删除？")){
 				$.ajax({
 					url: "/Selisse/delOrder",
@@ -122,7 +125,7 @@ Common = {
 						if(json.responseText == '000000'){
 							alert("删除成功！");
 							// 更新余额
-							Common.updateBalance(parseFloat(localStorage.getItem("userBalance")) + parseFloat(charges),function(){
+							Common.updateBalance("add",parseFloat(charges),agentID,function(){
 								if(successCall){
 									successCall();
 								}else{

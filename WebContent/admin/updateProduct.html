@@ -18,6 +18,20 @@ KindEditor.ready(function(K) {
 	});
 	editor.html("");
 	K('input[name=updateProduct]').click(function(e) {
+		var type = $("#product_type option:selected").val();
+		if($("#product_name").val()==""){
+			alert("不要忘了填写产品名称哟！");
+			return;
+		}
+		//if($("#pic_url").val()=="" && type == '1'){
+		//	alert("难道产品没有图片？");
+		//	return;
+		//}
+		if(editor.html()=="" && type == '1'){
+			alert("来点内容吧！");
+			return;
+		}
+		
 		$("#deal_content").val(encodeURIComponent(editor.html()));
 		$("#update_form").submit();
 	});
@@ -98,11 +112,8 @@ KindEditor.ready(function(K) {
 				$("#zong_price").val(data.zongPrice);
 				$("#a_price").val(data.aPrice);
 				$("#amount").val(data.amount);
-				var newDate = new Date();
-				newDate.setTime(data.last_in_time.time);
-				$("#last_in_time").val(newDate.Format('yyyy-MM-dd h:m:s'));
-				newDate.setTime(data.last_update_time.time);
-				$("#last_update_time").val(newDate.Format('yyyy-MM-dd h:m:s'));
+				$("#last_in_time").val(Common.timeToString(data.last_in_time.time));
+				$("#last_update_time").val(Common.timeToString(data.last_update_time.time));
 				$("#product_type").find("option[value='"+data.type+"']").prop("selected","selected");
 			}
 		});

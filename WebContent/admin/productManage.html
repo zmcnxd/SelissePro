@@ -40,27 +40,30 @@ tbody tr:nth-child(2n){background:#ddd;color:#fff;}
 			dataType : "json",
 			success : function(data){
 				data.forEach(function(item){
-					$("<tr><td>"+item.name+"</td><td>"+(item.type==1?"正装":(item.type==2?"小样":"物料"))+"</td><td>"+item.order+"</td><td><img src='/Selisse/"+item.imgSrc+"'</td><td><a href='updateProduct.html?productID="+item.ID+"'>编辑</a>&nbsp;&nbsp;<a href='javascript:' onclick='deleteProduct(\""+item.ID+"\")'>删除</a></td></tr>").appendTo($("#allProduct tbody"));
+					$("<tr><td>"+item.name+"</td><td>"+(item.type==1?"正装":"小样物料")+"</td><td>"+item.order+"</td><td>"+(item.imgSrc?"<img src='/Selisse/"+item.imgSrc+"' />":"")+"</td><td><a href='updateProduct.html?productID="+item.ID+"'>编辑</a>&nbsp;&nbsp;<a href='javascript:' onclick='deleteProduct(\""+item.ID+"\")'>删除</a></td></tr>").appendTo($("#allProduct tbody"));
 				});
 			}
 		});
 	});
 	
 	function deleteProduct(productID){
-		$.ajax({
-			url : "/Selisse/deleteProduct",
-			type : "post",
-			data : "id=" + productID,
-			success : function(data){
-				if(data == "000000"){
-					alert("删除成功！");
-					window.location.reload();
+		if(confirm("确认删除？")){
+			$.ajax({
+				url : "/Selisse/deleteProduct",
+				type : "post",
+				data : "id=" + productID,
+				success : function(data){
+					if(data == "000000"){
+						alert("删除成功！");
+						window.location.reload();
+					}
+					else{
+						alert("删除失败");
+					}
 				}
-				else{
-					alert("删除失败");
-				}
-			}
-		});
+			});
+		}
+		
 	}
 </script>
 </body>

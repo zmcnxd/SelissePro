@@ -179,6 +179,7 @@
 					url: "/Selisse/addOrder",
 					type: "post",
 					data: {
+						agentID: localStorage.getItem("userID"),
 						name: localStorage.getItem("userName"),
 						reciver: $("#reciver").html(),
 						address: $("input[name='addr']:checked").attr("data-addr-text"),
@@ -194,7 +195,7 @@
 						if(data == "000000"){
 							alert("结算成功，可在订单查询里查询，稍后跟单会为您发货！");
 							// 更新余额
-							Common.updateBalance(localStorage.getItem("userBalance") - totalPrice,function(){
+							Common.updateBalance("minus",parseFloat(totalPrice),localStorage.getItem("userID"),function(){
 								window.location.href = "/Selisse/admin/agent/myOrders.html";
 							},function(){
 								alert("余额更新失败，请联系管理员！");

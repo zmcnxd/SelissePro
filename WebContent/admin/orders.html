@@ -37,7 +37,7 @@ tbody td{text-align: center;padding: 20px 0;}
 						+(item.status==0?"未发货":"已发货")
 						+"</td><td><a class='gray-btn' href='orderDetail.html?orderID="+item.ID
 						+"'>订单详情</a>&nbsp;&nbsp;<a class='gray-btn' onclick='Common.delOrder(\""+item.ID
-						+"\",\""+item.charges+"\")'>删除</a></td></tr>").appendTo($("tbody"));	
+						+"\",\""+item.agentID+"\",\""+item.amount+"\")'>删除</a></td></tr>").appendTo($("tbody"));	
 			});
 		}
 	});
