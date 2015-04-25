@@ -28,6 +28,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 
 import com.selisse.db.common;
@@ -65,6 +66,7 @@ public class addOrder extends HttpServlet {
 		String samples = request.getParameter("samples");
 		String wuliao = request.getParameter("wuliao");
 		String charges = request.getParameter("charges");
+		String jsonp=request.getParameter("jsonpcallback");
 		
 		boolean isSuccess = common.addOrder(name,agentID,reciver,address,mobile,amount,products,samples,wuliao,charges,express);
 		try{
@@ -79,9 +81,14 @@ public class addOrder extends HttpServlet {
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
 		}
-		         
 		
-		outer.write((isSuccess ? "000000" : "999999"));
+		if(StringUtils.isNotEmpty(jsonp)){
+			outer.write(jsonp+"({'result':'"+(isSuccess ? "000000" : "999999")+"'})");
+		}else{
+			outer.write((isSuccess ? "000000" : "999999"));
+		}
+		
+		
 	}
 
 	// ���ʵ��

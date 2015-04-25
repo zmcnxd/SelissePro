@@ -25,6 +25,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 
 import com.selisse.db.common;
@@ -46,10 +47,15 @@ public class getAgentAddress extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter outer = response.getWriter();
 		String userid = request.getParameter("userID");
+		String jsonp=request.getParameter("jsonpcallback");
 		
 		List address = common.getAgentAddress(userid);
 		JSONArray ordersArr = new JSONArray(address);
-		outer.write(ordersArr.toString());
+		if(StringUtils.isNotEmpty(jsonp)){
+			outer.write(jsonp+"("+ordersArr.toString()+")");
+		}else{
+			outer.write(ordersArr.toString());
+		}
 	}
 	
 

@@ -44,8 +44,13 @@
 				return;
 			}
 			for(var index=0;index<data.length;index++){
-				$(".address").append('<p><input type="radio" data-addr-text="'+data[index].name+','+data[index].mobile+','+data[index].addr+'" value="'+index+'"'+(index==0?' checked':'')+'  name="addr"/>收货人姓名：<span id="reciver">'+data[index].name+'</span>&nbsp;&nbsp;'
-				+'电话：<span id="mobile">'+data[index].mobile+'</span>&nbsp;&nbsp;收货地址：<span id="addr">'+data[index].addr+'</span></p>');
+				$(".address").append('<p>'+
+						'<input type="radio" data-addr-text="'+data[index].name+','+data[index].mobile+','+data[index].addr+
+						'" data-reciver="'+data[index].name+'" data-mobile="'+data[index].mobile+
+						'" value="'+index+'"'+(index==0?' checked':'')+'  name="addr"/>'+
+						'收货人姓名：<span class="reciver">'+data[index].name+'</span>&nbsp;&nbsp;'+
+						'电话：<span class="mobile">'+data[index].mobile+
+						'</span>&nbsp;&nbsp;收货地址：<span id="addr">'+data[index].addr+'</span></p>');
 			}
 		}
 	});
@@ -181,9 +186,9 @@
 					data: {
 						agentID: localStorage.getItem("userID"),
 						name: localStorage.getItem("userName"),
-						reciver: $("#reciver").html(),
+						reciver: $("input[name='addr']:checked").attr("data-reciver"),
 						address: $("input[name='addr']:checked").attr("data-addr-text"),
-						mobile: $("#mobile").html(),
+						mobile: $("input[name='addr']:checked").attr("data-mobile"),
 						amount: totalPrice,
 						products: JSON.stringify(proBuy),
 						express: exprArr[$("#express_choose").val()],

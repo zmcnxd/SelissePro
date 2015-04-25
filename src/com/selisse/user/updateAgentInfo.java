@@ -25,6 +25,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 
 import com.selisse.db.common;
@@ -54,15 +55,24 @@ public class updateAgentInfo extends HttpServlet {
 		String agentID = request.getParameter("agentID");
 		String type = request.getParameter("type");
 		String value = request.getParameter("value");
+		String jsonp=request.getParameter("jsonpcallback");
 		if(!type.equals("address")){
-			boolean result = common.updateAgentInfo(agentID,type,value);
-			outer.write(result ? "000000" : "999999");
+			boolean isSuccess = common.updateAgentInfo(agentID,type,value);
+			if(StringUtils.isNotEmpty(jsonp)){
+				outer.write(jsonp+"({'result':'"+(isSuccess ? "000000" : "999999")+"'})");
+			}else{
+				outer.write((isSuccess ? "000000" : "999999"));
+			}
 		}else{
 			String names = request.getParameter("names");
 			String mobiles = request.getParameter("mobiles");
 			String addrs = request.getParameter("addrs");
-			boolean result = common.updateAddress(agentID,names,mobiles,addrs);
-			outer.write(result ? "000000" : "999999");
+			boolean isSuccess = common.updateAddress(agentID,names,mobiles,addrs);
+			if(StringUtils.isNotEmpty(jsonp)){
+				outer.write(jsonp+"({'result':'"+(isSuccess ? "000000" : "999999")+"'})");
+			}else{
+				outer.write((isSuccess ? "000000" : "999999"));
+			}
 		}
 		
 	}
